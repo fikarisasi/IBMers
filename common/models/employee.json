@@ -1,0 +1,52 @@
+{
+  "name": "Employee",
+  "base": "User",
+  "strict": false,
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "id": true,
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string",
+      "required": true
+    },
+    "bio": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string"
+    },
+    "photo": {
+      "type": "string"
+    },
+    "poin": {
+      "type": "number"
+    },
+    "status_badge": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "posts": {
+      "type": "hasMany",
+      "model": "Post",
+      "foreignKey": "employee"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
