@@ -1,0 +1,18 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "cloudantNoSQLDB": {
+    "host": "714c992b-2b72-440c-9833-aea9d70400d0-bluemix.cloudant.com",
+    "port": 443,
+    "url": "https://714c992b-2b72-440c-9833-aea9d70400d0-bluemix:3f32b9cdb4341e5ebf6e25146dde5f066f6bdcda31ba7bd4c0e640d279dadc72@714c992b-2b72-440c-9833-aea9d70400d0-bluemix.cloudant.com",
+    "database": "ibmersdb",
+    "username": "714c992b-2b72-440c-9833-aea9d70400d0-bluemix",
+    "password": "3f32b9cdb4341e5ebf6e25146dde5f066f6bdcda31ba7bd4c0e640d279dadc72",
+    "name": "cloudantNoSQLDB",
+    "label": "cloudantNoSQLDB",
+    "plan": "Shared",
+    "connector": "cloudant"
+  }
+}
