@@ -1,0 +1,42 @@
+<ion-view view-title="Detil laporan">
+	<ion-nav-buttons side="left">
+		<button class="button button-clear icon-button mdi mdi-arrow-left" ng-click="back()"></button>
+	</ion-nav-buttons>
+	<ion-content class="padding">
+		<div class="list">
+			<div class="item item-avatar">
+				<img src="img/sherly.jpg">
+				<h2>Lorem Ipsum</h2>
+				<p>Lorem Tanggal</p>
+			</div>
+		</div>
+		<hr>
+		<div class="list">
+			<div class="item item-body">
+				<h1 class="card-title">Judul</h1>
+				<p style="font-weight:500;">Lorem LoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLorem</p>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col col-20">
+					<img ng-src="img/sherly.jpg" width="100%">
+				</div>
+				<div class="col">
+					<form method="post" enctype="text/plain">
+						<input type="text" style="border:1px solid black;width:100%;padding:1em;" ng-model="formKomentar.komen" placeholder="Tambahkan komentar anda">
+						<input type="submit" value="Komentar" class="button button-small button-calm-900" style="display:none;" ng-click="addKomentar()"></input>
+					</div>
+				</form>
+			</div>
+		</div>
+		<hr>
+		<div class="list">
+			<div class="item item-avatar">
+				<img src="img/sherly.jpg">
+				<h2>Lorem</h2>
+				<p>Hehe</p>
+			</div>
+		</div>
+	</div>
+</ion-content>
+</ion-view>

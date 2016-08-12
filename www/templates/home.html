@@ -1,0 +1,25 @@
+<ion-view view-title="Timeline" hide-back-button="true" cache-view="false">
+  <ion-nav-buttons side="right">
+
+  </ion-nav-buttons>
+  <ion-content overflow-scroll=true scroll-sista="tabs" class="padding" style="background-color:#ececec;">
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()" refreshing-text="Fetching ..." refreshing-icon="ion-loading-b"></ion-refresher>
+    <div class="list card home-card">
+      <a ng-href="#/app/home/idrandom">
+        <div class="item item-avatar">
+          <img ng-src="img/sherly.jpg">
+          <h2>User Id</h2>
+          <p>20-01-1970</p>
+        </div>
+        <div class="item item-body">
+          <h1 class="card-title">Judul</h1>
+          <p style="font-weight:500;">Konten</p>
+          <p>
+            <a href="#" class="subdued">1 Like</a>
+            <a href="#" class="subdued">5 Comments</a>
+          </p>
+        </div>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>
