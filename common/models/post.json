@@ -7,35 +7,31 @@
     "validateUpsert": true
   },
   "properties": {
-    "id": {
-      "type": "string",
-      "id": true,
-      "required": true
-    },
-    "title": {
-      "type": "string"
-    },
-    "photo": {
-      "type": "string"
-    },
     "category": {
-      "type": "string"
-    },
-    "privacy": {
-      "type": "string"
-    },
-    "priority": {
-      "type": "string"
-    },
-    "like": {
       "type": "string"
     },
     "comment": {
       "type": "string"
     },
-    "writer": {
+    "content": {
       "type": "string",
       "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "like": {
+      "type": "string"
+    },
+    "photo": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string"
+    },
+    "privacy": {
+      "type": "string"
     },
     "receiver": {
       "type": "string",
@@ -45,12 +41,11 @@
       "type": "string",
       "required": true
     },
-    "content": {
-      "type": "string",
-      "required": true
+    "title": {
+      "type": "string"
     },
-    "date": {
-      "type": "date",
+    "writer": {
+      "type": "string",
       "required": true
     }
   },

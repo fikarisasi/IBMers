@@ -40,7 +40,7 @@
     "$resolved": true
   },
   "Post": {
-    "dataSource": "cloudantNoSQLDB",
+    "dataSource": "db",
     "public": true,
     "$promise": {},
     "$resolved": true
