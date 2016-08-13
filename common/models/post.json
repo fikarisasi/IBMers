@@ -2,11 +2,16 @@
   "name": "Post",
   "base": "PersistedModel",
   "strict": false,
-  "idInjection": true,
+  "idInjection": false,
   "options": {
     "validateUpsert": true
   },
   "properties": {
+  	"id": {
+  		"type": "number",
+  		"generated": true,
+  		"id": true
+  	},
     "category": {
       "type": "string"
     },
