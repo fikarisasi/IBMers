@@ -7,5 +7,3 @@ applications:
   name: ibmers
   host: ibmers
   disk_quota: 1024M
-  services:
-  - cloudantNoSQLDB

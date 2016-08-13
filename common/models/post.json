@@ -18,8 +18,7 @@
       "required": true
     },
     "date": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "like": {
       "type": "string"
@@ -34,19 +33,17 @@
       "type": "string"
     },
     "receiver": {
-      "type": "string",
-      "required": true
-    },
-    "seen": {
-      "type": "string",
-      "required": true
-    },
-    "title": {
       "type": "string"
     },
-    "writer": {
+    "seen": {
+      "type": "string"
+    },
+    "title": {
       "type": "string",
       "required": true
+    },
+    "writer": {
+      "type": "string"
     }
   },
   "validations": [],
