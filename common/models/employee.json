@@ -8,7 +8,7 @@
   },
   "properties": {
     "id": {
-      "type": "string",
+      "type": "number",
       "id": true,
       "required": true
     },
@@ -17,8 +17,7 @@
       "required": true
     },
     "role": {
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     "bio": {
       "type": "string"
