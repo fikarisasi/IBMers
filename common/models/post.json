@@ -8,7 +8,7 @@
   },
   "properties": {
 	"id": {
-	  "type": "number",
+	  "type": "string",
 	  "id": true,
 	  "idInjection": true
 	},
