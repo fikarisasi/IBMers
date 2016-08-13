@@ -2,7 +2,7 @@
   "name": "Employee",
   "base": "User",
   "strict": false,
-  "idInjection": false,
+  "idInjection": true,
   "options": {
     "validateUpsert": true
   },
