@@ -7,11 +7,11 @@
     "validateUpsert": true
   },
   "properties": {
-  	"id": {
-  		"type": "number",
-  		"generated": true,
-  		"id": true
-  	},
+	"id": {
+	"type": "number",
+	"generated": true,
+	"id": true
+	},
     "category": {
       "type": "string"
     },

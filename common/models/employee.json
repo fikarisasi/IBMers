@@ -8,10 +8,10 @@
   },
   "properties": {
     "id": {
-  	"type": "number",
-  	"generated": true,
-  	"id": true
-  	},
+	"type": "number",
+	"generated": true,
+	"id": true
+	},
     "name": {
       "type": "string",
       "required": true
