@@ -19,7 +19,7 @@
   },
   "AccessToken": {
     "dataSource": "cloudantNoSQLDB",
-    "public": true
+    "public": false
   },
   "ACL": {
     "dataSource": "cloudantNoSQLDB",
