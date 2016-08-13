@@ -9,7 +9,8 @@
   "properties": {
 	"id": {
 	  "type": "number",
-	  "id": true
+	  "id": true,
+	  "idInjection": true
 	},
     "category": {
       "type": "string"
