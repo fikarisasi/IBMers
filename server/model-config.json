@@ -14,11 +14,11 @@
     ]
   },
   "User": {
-    "dataSource": "cloudantNoSQLDB",
+    "dataSource": "db",
     "public": false
   },
   "AccessToken": {
-    "dataSource": "cloudantNoSQLDB",
+    "dataSource": "db",
     "public": false
   },
   "ACL": {
@@ -40,7 +40,7 @@
     "$resolved": true
   },
   "Post": {
-    "dataSource": "cloudantNoSQLDB",
+    "dataSource": "db",
     "public": true,
     "$promise": {},
     "$resolved": true
