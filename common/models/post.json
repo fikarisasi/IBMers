@@ -8,9 +8,8 @@
   },
   "properties": {
 	"id": {
-	"type": "number",
-	"generated": true,
-	"id": true
+	  "type": "number",
+	  "id": true
 	},
     "category": {
       "type": "string"
