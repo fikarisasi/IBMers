@@ -14,23 +14,23 @@
     ]
   },
   "User": {
-    "dataSource": "db",
+    "dataSource": "cloudantNoSQLDB",
     "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
-    "public": false
+    "dataSource": "cloudantNoSQLDB",
+    "public": true
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "cloudantNoSQLDB",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "cloudantNoSQLDB",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "cloudantNoSQLDB",
     "public": false
   },
   "Employee": {
@@ -40,7 +40,7 @@
     "$resolved": true
   },
   "Post": {
-    "dataSource": "db",
+    "dataSource": "cloudantNoSQLDB",
     "public": true,
     "$promise": {},
     "$resolved": true
