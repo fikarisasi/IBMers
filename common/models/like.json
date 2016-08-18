@@ -9,6 +9,9 @@
   "properties": {
     "employeeName": {
       "type": "string"
+    },
+    "likeStatus": {
+      "type": "boolean"
     }
   },
   "validations": [],
