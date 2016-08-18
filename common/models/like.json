@@ -6,7 +6,11 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "employeeName": {
+      "type": "string"
+    }
+  },
   "validations": [],
   "relations": {
     "employee": {

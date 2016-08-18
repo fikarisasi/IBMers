@@ -9,6 +9,12 @@
   "properties": {
     "content": {
       "type": "string"
+    },
+    "employeeName": {
+      "type": "string"
+    },
+    "date": {
+      "type": "date"
     }
   },
   "validations": [],
