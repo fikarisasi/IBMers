@@ -44,5 +44,17 @@
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "Comment": {
+    "dataSource": "cloudantNoSQLDB",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "Like": {
+    "dataSource": "cloudantNoSQLDB",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   }
 }

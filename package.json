@@ -33,7 +33,7 @@
   },
   "license": "UNLICENSED",
   "description": "ibmers",
-  "bundleDependencies" : [
+  "bundleDependencies": [
     "compression",
     "cors",
     "errorhandler",

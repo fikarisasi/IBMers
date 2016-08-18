@@ -7,15 +7,12 @@
     "validateUpsert": true
   },
   "properties": {
-	"id": {
-	  "type": "string",
-	  "id": true,
-	  "idInjection": true
-	},
-    "category": {
-      "type": "string"
+    "id": {
+      "type": "string",
+      "id": true,
+      "idInjection": true
     },
-    "comment": {
+    "category": {
       "type": "string"
     },
     "content": {
@@ -24,9 +21,6 @@
     },
     "date": {
       "type": "date"
-    },
-    "like": {
-      "type": "string"
     },
     "photo": {
       "type": "string"
@@ -52,7 +46,18 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "comments": {
+      "type": "hasMany",
+      "model": "Comment",
+      "foreignKey": ""
+    },
+    "likes": {
+      "type": "hasMany",
+      "model": "Like",
+      "foreignKey": ""
+    }
+  },
   "acls": [],
   "methods": {}
 }

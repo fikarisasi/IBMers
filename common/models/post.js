@@ -13,23 +13,11 @@ module.exports = function(Post) {
 	Post.remoteMethod(
 		'getPostByRole',
 		{
-			accepts: {arg: 'receiver', type: 'string'},
+			accepts: {arg: 'role', type: 'string'},
 			returns: {
 				arg: 'id', type: 'string', root: true
-				// {arg: 'category', type: 'string'},
-				// {arg: 'comment', type: 'string'},
-				// {arg: 'content', type: 'string'},
-				// {arg: 'date', type: 'date'},
-				// {arg: 'like', type: 'string'},
-				// {arg: 'photo', type: 'string'},
-				// {arg: 'priority', type: 'string'},
-				// {arg: 'privacy', type: 'string'},
-				// {arg: 'seen', type: 'string'},
-				// {arg: 'title', type: 'string'},
-				// {arg: 'writer', type: 'string'},
-				// {arg: 'employee', type: 'string'}
 			},
-			http: {path: '/getPostByRole', verb: 'get', souce: 'query'},
+			http: {path: '/getPostByRole', verb: 'get', source: 'query'},
 			description: "Get all posts by user role"
 		}
 	);

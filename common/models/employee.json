@@ -8,10 +8,10 @@
   },
   "properties": {
     "id": {
-	  "type": "string",
-	  "id": true,
-	  "idInjection": true
-	},
+      "type": "string",
+      "id": true,
+      "idInjection": true
+    },
     "name": {
       "type": "string",
       "required": true
@@ -43,7 +43,7 @@
     "posts": {
       "type": "hasMany",
       "model": "Post",
-      "foreignKey": "employee"
+      "foreignKey": ""
     }
   },
   "acls": [],
