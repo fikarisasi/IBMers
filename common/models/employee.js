@@ -91,6 +91,17 @@ module.exports = function(Employee) {
 			});
 	};
 
+	Employee.likeCounter = function(postId, cb){
+		Employee.find({where: {postLiked: {like: postId}}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					cb(null,instance.length);
+				}
+			});
+	}
+
 	Employee.remoteMethod(
 		'getName',
 		{
@@ -122,5 +133,16 @@ module.exports = function(Employee) {
 					],
 			returns: {arg: 'postLiked', type: 'string', root: true},
 			http: {path: '/addUnlike', verb: 'put'}
-		})
+		}
+	);
+
+	Employee.remoteMethod(
+		'likeCounter',
+		{
+			accepts: {arg: 'postId', type: 'string'},
+			returns: {arg: 'count', type: 'number'},
+			http: {path: '/likeCounter', verb: 'get', source: 'query'},
+			description: "Get count like of a post"
+		}
+	);
 };
