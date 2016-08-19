@@ -16,21 +16,26 @@ module.exports = function(Employee) {
 				if(instance===null){
 					cb(null,null);
 				}else{
-					var data = []; //init empty array
-					data.push(instance['postLiked']); //get every posts he has liked
-					data.push(postId); //push new post he like
-					postLikedNow = data.toString(); //store all post he has liked now to string
-					Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
-					function(err,info){
-						Employee.findOne({fields: {postLiked: true}, where:{id: employeeId}},
-							function(err,instance){
-								if(instance===null){
-									cb(null,null);
-								}else{
-									cb(null,instance);
-								}
-							})
-					});
+					// var data = []; //init empty array
+					// data.push(instance['postLiked']); //get every posts he has liked
+					data = instance['postLiked']; //get every posts he has liked
+					postLikedNow = data.toString();
+					if(postLikedNow.includes(postId)){
+						cb("Post id has been registered, you cannot like a post twice");
+					}else{
+						postLikedNow = postLikedNow + ',' + postId;
+						Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
+						function(err,info){
+							Employee.findOne({fields: {postLiked: true}, where:{id: employeeId}},
+								function(err,instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						});
+					}
 				}				
 			});
 	};
