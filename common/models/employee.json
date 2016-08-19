@@ -36,6 +36,9 @@
     },
     "location": {
       "type": "string"
+    },
+    "postLiked": {
+      "type": "string"
     }
   },
   "validations": [],
@@ -53,6 +56,20 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "getName"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "addLike"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "addUnlike"
     }
   ],
   "methods": {}
