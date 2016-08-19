@@ -105,8 +105,8 @@ module.exports = function(Employee) {
 		'addLike',
 		{
 			accepts: [
-					{arg: 'employee id', type: 'string'},
-					{arg: 'post id', type: 'string'}
+					{arg: 'employeeId', type: 'string'},
+					{arg: 'postId', type: 'string'}
 					],
 			returns: {arg: 'postLiked', type: 'string', root: true},
 			http: {path: '/addLike', verb: 'put'}
@@ -117,8 +117,8 @@ module.exports = function(Employee) {
 		'addUnlike',
 		{
 			accepts: [
-					{arg: 'employee id', type: 'string'},
-					{arg: 'post id', type: 'string'}
+					{arg: 'employeeId', type: 'string'},
+					{arg: 'postId', type: 'string'}
 					],
 			returns: {arg: 'postLiked', type: 'string', root: true},
 			http: {path: '/addUnlike', verb: 'put'}
