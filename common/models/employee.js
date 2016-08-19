@@ -16,17 +16,33 @@ module.exports = function(Employee) {
 				if(instance===null){
 					cb(null,null);
 				}else{
-					// var data = []; //init empty array
-					// data.push(instance['postLiked']); //get every posts he has liked
 					data = instance['postLiked']; //get every posts he has liked
 					postLikedNow = data.toString();
+					//if postId has been liked
 					if(postLikedNow.includes(postId)){
 						cb("Post id has been registered, you cannot like a post twice");
-					}else{
+					}
+					//if this is the first post he like
+					else if(postLikedNow === ''){
+						postLikedNow = postId;
+						Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
+						function(err,info){
+							Employee.findOne({where:{id: employeeId}},
+								function(err,instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						});
+					}
+					//it's only the last post he liked
+					else{
 						postLikedNow = postLikedNow + ',' + postId;
 						Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
 						function(err,info){
-							Employee.findOne({fields: {postLiked: true}, where:{id: employeeId}},
+							Employee.findOne({where:{id: employeeId}},
 								function(err,instance){
 									if(instance===null){
 										cb(null,null);
@@ -46,17 +62,23 @@ module.exports = function(Employee) {
 				if(instance===null){
 					cb(null,null);
 				}else{
-					var data = []; //init empty array
-					data.push(instance['postLiked']); //get every posts he has liked
+					data = instance['postLiked']; //get every posts he has liked
 					postLikedNow = data.toString(); //store all post he has liked now to string
+					//if the postId is in mid
 					if(postLikedNow.includes(postId + ',')){
 						postLikedNow = postLikedNow.replace(postId + ',','');
-					}else {						
+					}
+					//if the postId at the last
+					else if(postLikedNow.includes(',' + postId)){
 						postLikedNow = postLikedNow.replace(',' + postId,'');
+					}
+					//postId is at the first
+					else {						
+						postLikedNow = postLikedNow.replace(postId,'');
 					}
 					Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
 					function(err,info){
-						Employee.findOne({fields: {postLiked: true}, where:{id: employeeId}},
+						Employee.findOne({where:{id: employeeId}},
 							function(err,instance){
 								if(instance===null){
 									cb(null,null);
