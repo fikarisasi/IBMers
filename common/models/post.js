@@ -27,7 +27,7 @@
 module.exports = function(Post) {
 	Post.getPostByRole = function(role,cb){
 		if(role === "div_all"){
-			Post.find({where: {div_all: true}},
+			Post.find({where: {or: [{or: [{div_all: true}, {div_jti: true}]}, {div_gbs: true}]}},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
@@ -62,7 +62,7 @@ module.exports = function(Post) {
 	Post.pagination = function(page, role, cb){
 		pagesize = page*10-10;
 		if(role==="div_all"){
-			Post.find({limit: 10, skip: pagesize, order : 'date DESC', where: {div_all: true}},
+			Post.find({limit: 10, skip: pagesize, order : 'date DESC', where: {or: [{or: [{div_all: true}, {div_jti: true}]}, {div_gbs: true}]}},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
