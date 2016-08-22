@@ -51,7 +51,7 @@ module.exports = function(Post) {
 	Post.pagination = function(page, cb){
 		pagesize = page*10-10;
 		console.log(pagesize); 
-		Post.find({limit: 10, skip: pagesize},
+		Post.find({limit: 10, skip: pagesize, order : 'date DESC'},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
