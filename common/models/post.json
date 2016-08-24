@@ -43,6 +43,12 @@
     },
     "writer": {
       "type": "string"
+    },
+    "liker": {
+      "type": "string"
+    },
+    "sharer": {
+      "type": "string"
     }
   },
   "validations": [],

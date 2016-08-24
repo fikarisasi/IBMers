@@ -91,16 +91,133 @@ module.exports = function(Employee) {
 			});
 	};
 
-	Employee.likeCounter = function(postId, cb){
-		Employee.find({where: {postLiked: {like: postId}}},
+	Employee.likeCounter = function(employeeId, cb){
+		Employee.findOne({fields: {postLiked: true}, where: {id: employeeId}},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
 				}else{
-					cb(null,instance.length);
+					data = instance['postLiked'].split(",");
+					cb(null,data.length);
 				}
 			});
-	}
+	};
+
+	Employee.addSeen = function(employeeId, postId, cb){
+		Employee.findOne({where:{id: employeeId}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					data = instance['postSeen']; //get every posts he has seen
+					postSeenNow = data.toString();
+					//if postId has been seen
+					if(postSeenNow.includes(postId)){
+						cb(null,instance);
+					}
+					//if this is the first post he see
+					else if(postSeenNow === ''){
+						postSeenNow = postId;
+						Employee.updateAll({id: employeeId}, {postSeen: postSeenNow}, //update
+						function(err,info){
+							Employee.findOne({where:{id: employeeId}},
+								function(err,instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						});
+					}
+					//it's only the last post he's seen
+					else{
+						postSeenNow = postSeenNow + ',' + postId;
+						Employee.updateAll({id: employeeId}, {postSeen: postSeenNow}, //update
+						function(err,info){
+							Employee.findOne({where:{id: employeeId}},
+								function(err,instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						});
+					}
+				}				
+			});
+	};
+
+	Employee.seenCounter = function(employeeId, cb){
+		Employee.findOne({fields: {postSeen: true}, where: {id: employeeId}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					data = instance['postSeen'].split(",");
+					cb(null,data.length);
+				}
+			});
+	};
+
+	Employee.addShared = function(employeeId, postId, cb){
+		Employee.findOne({where:{id: employeeId}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					data = instance['postShared']; //get every posts he has shared
+					postSharedNow = data.toString();
+					//if postId has been shared
+					if(postSharedNow.includes(postId)){
+						cb(null,instance);
+					}
+					//if this is the first post he share
+					else if(postSharedNow === ''){
+						postSharedNow = postId;
+						Employee.updateAll({id: employeeId}, {postShared: postSharedNow}, //update
+						function(err,info){
+							Employee.findOne({where:{id: employeeId}},
+								function(err,instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						});
+					}
+					//it's only the last post he's shared
+					else{
+						postSharedNow = postSharedNow + ',' + postId;
+						Employee.updateAll({id: employeeId}, {postShared: postSharedNow}, //update
+						function(err,info){
+							Employee.findOne({where:{id: employeeId}},
+								function(err,instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						});
+					}
+				}				
+			});
+	};
+
+	Employee.sharedCounter = function(employeeId, cb){
+		Employee.findOne({fields: {postShared: true}, where: {id: employeeId}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					data = instance['postShared'].split(",");
+					cb(null,data.length);
+				}
+			});
+	};
 
 	Employee.remoteMethod(
 		'getName',
@@ -139,10 +256,54 @@ module.exports = function(Employee) {
 	Employee.remoteMethod(
 		'likeCounter',
 		{
-			accepts: {arg: 'postId', type: 'string'},
+			accepts: {arg: 'employeeId', type: 'string'},
 			returns: {arg: 'count', type: 'number'},
 			http: {path: '/likeCounter', verb: 'get', source: 'query'},
-			description: "Get count like of a post"
+			description: "Get how many post Employee{id} has liked"
+		}
+	);
+
+	Employee.remoteMethod(
+		'seenCounter',
+		{
+			accepts: {arg: 'employeeId', type: 'string'},
+			returns: {arg: 'count', type: 'number'},
+			http: {path: '/seenCounter', verb: 'get', source: 'query'},
+			description: "Get how many post Employee{id} has seen"
+		}
+	);
+
+	Employee.remoteMethod(
+		'sharedCounter',
+		{
+			accepts: {arg: 'employeeId', type: 'string'},
+			returns: {arg: 'count', type: 'number'},
+			http: {path: '/sharedCounter', verb: 'get', source: 'query'},
+			description: "Get how many post Employee{id} has shared"
+		}
+	);
+
+	Employee.remoteMethod(
+		'addSeen',
+		{
+			accepts: [
+					{arg: 'employeeId', type: 'string'},
+					{arg: 'postId', type: 'string'}
+					],
+			returns: {arg: 'postSeen', type: 'string', root: true},
+			http: {path: '/addSeen', verb: 'put'}
+		}
+	);
+
+	Employee.remoteMethod(
+		'addShared',
+		{
+			accepts: [
+					{arg: 'employeeId', type: 'string'},
+					{arg: 'postId', type: 'string'}
+					],
+			returns: {arg: 'postSeen', type: 'string', root: true},
+			http: {path: '/addShared', verb: 'put'}
 		}
 	);
 };

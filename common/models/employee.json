@@ -39,6 +39,12 @@
     },
     "postLiked": {
       "type": "string"
+    },
+    "postSeen": {
+      "type": "string"
+    },
+    "postShared": {
+      "type": "string"
     }
   },
   "validations": [],
@@ -77,6 +83,34 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "likeCounter"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "addSeen"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "addShared"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "seenCounter"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "sharedCounter"
     }
   ],
   "methods": {}
