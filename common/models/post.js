@@ -272,7 +272,9 @@ module.exports = function(Post) {
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
-				}else{
+				}else if(instance['liker'] === ""){
+						cb(null,0);
+				}else {
 					data = instance['liker'].split(",");
 					cb(null,data.length);
 				}
@@ -284,7 +286,9 @@ module.exports = function(Post) {
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
-				}else{
+				}else if(instance['seen'] === ""){
+						cb(null,0);
+				}else {
 					data = instance['seen'].split(",");
 					cb(null,data.length);
 				}
@@ -296,7 +300,9 @@ module.exports = function(Post) {
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
-				}else{
+				}else if(instance['sharer'] === ""){
+						cb(null,0);
+				}else {
 					data = instance['sharer'].split(",");
 					cb(null,data.length);
 				}

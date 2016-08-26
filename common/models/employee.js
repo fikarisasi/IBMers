@@ -96,7 +96,9 @@ module.exports = function(Employee) {
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
-				}else{
+				}else if(instance['postLiked'] === ""){
+						cb(null,0);
+				}else {
 					data = instance['postLiked'].split(",");
 					cb(null,data.length);
 				}
@@ -154,7 +156,9 @@ module.exports = function(Employee) {
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
-				}else{
+				}else if(instance['postSeen'] === ""){
+						cb(null,0);
+				}else {
 					data = instance['postSeen'].split(",");
 					cb(null,data.length);
 				}
@@ -212,7 +216,9 @@ module.exports = function(Employee) {
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
-				}else{
+				}else if(instance['postShared'] === ""){
+						cb(null,0);
+				}else {
 					data = instance['postShared'].split(",");
 					cb(null,data.length);
 				}
