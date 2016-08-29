@@ -267,6 +267,47 @@ module.exports = function(Post) {
 			});
 	};
 
+	Post.addComment = function(postId, employeeId, employeeName, content, cb){
+		Post.findOne({where:{id: postId}}, 
+			function(err, instance){
+				data = instance['comment'];
+				date = new Date();
+				dateJSON = date.toJSON();
+				//if comment is empty -- first comment to be added
+				if(data.toString() === "[{}]"){
+					newComment = '{"id": "1", "employeeId": "'+employeeId+'", "employeeName": "'+employeeName+'", "content": "'+content+'", "date": "'+dateJSON+'"}';
+					Post.updateAll({id: postId}, {comment: '['+newComment+']'},
+						function(err,info){
+							Post.findOne({where: {id: postId}},
+								function(err, instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						})				
+				}else{ //last comment to be added
+					commentId = data.length + 1; //generate commentId by the number of the comments
+					console.log(data.length);
+					newComment = '{"id": "'+commentId+'", "employeeId": "'+employeeId+'", "employeeName": "'+employeeName+'", "content": "'+content+'", "date": "'+dateJSON+'"}';
+					data.push(JSON.parse(newComment)); //add newComment to array by parsing it to Javascript
+					commentNow = data.toString();
+					Post.updateAll({id: postId}, {comment: commentNow},
+						function(err,info){
+							Post.findOne({where: {id: postId}},
+								function(err, instance){
+									if(instance===null){
+										cb(null,null);
+									}else{
+										cb(null,instance);
+									}
+								})
+						})
+				}
+			});
+	};
+
 	Post.likerCounter = function(postId, cb){
 		Post.findOne({fields: {liker: true}, where: {id: postId}},
 			function(err,instance){
@@ -379,6 +420,19 @@ module.exports = function(Post) {
 			http: {path: '/addSharer', verb: 'put'}
 		}
 	);
+
+	Post.remoteMethod(
+		'addComment',
+		{
+			accepts: [
+					{arg: 'postId', type: 'string'},
+					{arg: 'employeeId', type: 'string'},
+					{arg: 'employeeName', type: 'string'},
+					{arg: 'content', type: 'string'},
+					],
+			returns: {arg: 'postId', type: 'string', root: true},
+			http: {path: '/addComment', verb: 'put'}
+		})
 
 	Post.remoteMethod(
 		'likerCounter',

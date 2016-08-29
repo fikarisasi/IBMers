@@ -49,6 +49,11 @@
     },
     "sharer": {
       "type": "string"
+    },
+    "comment": {
+      "type": [
+        "object"
+      ]
     }
   },
   "validations": [],
