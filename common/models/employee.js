@@ -11,7 +11,7 @@ module.exports = function(Employee) {
 	};
 
 	Employee.getLeaderboard = function(cb){
-		Employee.find({fields: {id: true, poin: true, badges: true, badgeCount: true}, order: 'poin DESC'},
+		Employee.find({fields: {id: true, username: true, poin: true, badges: true, badgeCount: true}, order: 'poin DESC'},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
