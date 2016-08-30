@@ -486,6 +486,48 @@ module.exports = function(Employee) {
 			});
 	};
 
+	Employee.updatePassword = function (ctx, email, oldPassword, newPassword, cb) {
+	  var newErrMsg, newErr;
+	  try {
+	    this.findOne({where: {id: ctx.req.accessToken.userId, email: email}}, function (err, user) {
+	      if (err) {
+	        cb(err);
+	      } else if (!user) { // if 
+	        newErrMsg = "No match between provided current logged user and email";
+	        newErr = new Error(newErrMsg);
+	        newErr.statusCode = 401;
+	        newErr.code = 'LOGIN_FAILED_EMAIL';
+	        cb(newErr);
+	      } else {
+	        user.hasPassword(oldPassword, function (err, isMatch) {
+	          if (isMatch) {
+
+	            // TODO ...further verifications should be done here (e.g. non-empty new password, complex enough password etc.)...
+
+	            user.updateAttributes({'password': newPassword}, function (err, instance) { // if inputted email current password is match with database
+	              if (err) {
+	                cb(err);
+	              } else {
+	                cb(null, true);
+	              }
+	            });
+	          } else {
+	            newErrMsg = 'User specified wrong current password !';
+	            newErr = new Error(newErrMsg);
+	            newErr.statusCode = 401;
+	            newErr.code = 'LOGIN_FAILED_PWD';
+	            return cb(newErr);
+	          }
+	        });
+	      }
+	    });
+	  } catch (err) {
+	    logger.error(err);
+	    cb(err);
+	  }
+
+	};
+
 	Employee.remoteMethod(
 		'getName',
 		{
@@ -581,5 +623,20 @@ module.exports = function(Employee) {
 			returns: {arg: 'postSeen', type: 'string', root: true},
 			http: {path: '/addShared', verb: 'put'}
 		}
+	);
+
+	Employee.remoteMethod(
+		'updatePassword',
+		  {
+		    description: "Allows a logged user to change his password.",
+		    http: {verb: 'put'},
+		    accepts: [
+		      {arg: 'ctx', type: 'object', http: {source: 'context'}},
+		      {arg: 'email', type: 'string', required: true, description: "The user email, just for verification"},
+		      {arg: 'oldPassword', type: 'string', required: true, description: "The user old password"},
+		      {arg: 'newPassword', type: 'string', required: true, description: "The user new password"}
+		    ],
+		    returns: {arg: 'passwordChange', type: 'boolean'}
+		  }
 	);
 };

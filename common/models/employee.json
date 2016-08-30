@@ -123,7 +123,14 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "sharedCounter"
-    }
+    },
+    {
+       "accessType": "EXECUTE",
+       "property":"updatePassword",
+       "principalType": "ROLE",
+       "principalId": "$authenticated",
+       "permission": "ALLOW"
+     }
   ],
   "methods": {}
 }
