@@ -289,7 +289,6 @@ module.exports = function(Post) {
 						})				
 				}else{ //last comment to be added
 					commentId = data.length + 1; //generate commentId by the number of the comments
-					console.log(data.length);
 					newComment = '{"id": "'+commentId+'", "employeeId": "'+employeeId+'", "employeeName": "'+employeeName+'", "content": "'+content+'", "date": "'+dateJSON+'"}';
 					data.push(JSON.parse(newComment)); //add newComment to array by parsing it to Javascript
 					commentNow = data.toString();

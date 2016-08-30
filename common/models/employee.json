@@ -31,9 +31,6 @@
     "poin": {
       "type": "number"
     },
-    "status_badge": {
-      "type": "string"
-    },
     "location": {
       "type": "string"
     },
@@ -45,6 +42,11 @@
     },
     "postShared": {
       "type": "string"
+    },
+    "badges": {
+      "type": [
+        "object"
+      ]
     }
   },
   "validations": [],
@@ -62,6 +64,13 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "getName"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "getLeaderboard"
     },
     {
       "accessType": "EXECUTE",

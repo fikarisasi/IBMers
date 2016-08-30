@@ -10,22 +10,36 @@ module.exports = function(Employee) {
 			});
 	};
 
-	Employee.addLike = function(employeeId, postId, cb){
-		Employee.findOne({fields: {postLiked: true}, where:{id: employeeId}},
+	Employee.getLeaderboard = function(cb){
+		Employee.find({order: 'poin DESC'},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
 				}else{
-					data = instance['postLiked']; //get every posts he has liked
-					postLikedNow = data.toString();
-					//if postId has been liked
+					cb(null,instance);
+				}
+			});
+	}
+
+	Employee.addLike = function(employeeId, postId, cb){
+		Employee.findOne({where:{id: employeeId}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					dataPostLiked = instance['postLiked']; //get every posts he has liked
+					postLikedNow = dataPostLiked.toString();
+					dataPoin = instance['poin']; //get every poin he got
+					dataPoin = dataPoin+3;
+					dataBadges = instance['badges']; //get every badges he achieved
+					// if postId has been liked
 					if(postLikedNow.includes(postId)){
 						cb("Post id has been registered, you cannot like a post twice");
 					}
 					//if this is the first post he like
 					else if(postLikedNow === ''){
 						postLikedNow = postId;
-						Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
+						Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin}, //update postLikedNow, and poin +3
 						function(err,info){
 							Employee.findOne({where:{id: employeeId}},
 								function(err,instance){
@@ -40,30 +54,112 @@ module.exports = function(Employee) {
 					//it's only the last post he liked
 					else{
 						postLikedNow = postLikedNow + ',' + postId;
-						Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
-						function(err,info){
-							Employee.findOne({where:{id: employeeId}},
-								function(err,instance){
-									if(instance===null){
-										cb(null,null);
-									}else{
-										cb(null,instance);
-									}
-								})
-						});
+						splitPostLiked = postLikedNow.split(','); //split postLikedNow to array to make it easier to be counted
+						counterLike = splitPostLiked.length;
+						console.log(counterLike);
+						//if posts he liked has been 10, he got bronze
+						if(counterLike==10){
+							date = new Date();
+							dateJSON = date.toJSON();
+							//if this is the first badge he got
+							if(dataBadges.toString()==="[{}]"){
+								newBadge = '{"badgeName": "The Twin Thumbs Up [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+								Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: '['+newBadge+']'}, //update postLikedNow, poin +3, newBadge
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}},
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											}else{
+												cb(null,instance);
+											}
+										})
+								});
+							}else{ //last badge to achieve
+								newBadge = '{"badgeName": "The Twin Thumbs Up [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+								dataBadges.push(JSON.parse(newBadge));
+								badgesNow = dataBadges.toString();
+								Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow}, //update postLikedNow, poin +3, newBadge
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}},
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											}else{
+												cb(null,instance);
+											}
+										})
+								});
+							}
+							
+						}else if(counterLike==30){ //if posts he liked has been 30, he get silver
+							date = new Date();
+							dateJSON = date.toJSON();
+							//since it's impossible to get silver badge without bronze first, we didn't include the first badge he got
+							 //last badge to achieve
+							newBadge = '{"badgeName": "The Twin Thumbs Up [SILVER]", "achieved_date": "'+dateJSON+'"}';
+							dataBadges.push(JSON.parse(newBadge));
+							badgesNow = dataBadges.toString();
+							Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow}, //update postLikedNow, poin +3, newBadge
+							function(err,info){
+								Employee.findOne({where:{id: employeeId}},
+									function(err,instance){
+										if(instance===null){
+											cb(null,null);
+										}else{
+											cb(null,instance);
+										}
+									})
+							});
+						}else if(counterLike==50){ //if posts he liked has been 50, he get gold
+							date = new Date();
+							dateJSON = date.toJSON();
+							//since it's impossible to get bold badge without bronze or silver first, we didn't include the first badge he got
+							 //last badge to achieve
+							newBadge = '{"badgeName": "The Twin Thumbs Up [GOLD]", "achieved_date": "'+dateJSON+'"}';
+							dataBadges.push(JSON.parse(newBadge));
+							badgesNow = dataBadges.toString();
+							Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow}, //update postLikedNow, poin +3, newBadge
+							function(err,info){
+								Employee.findOne({where:{id: employeeId}},
+									function(err,instance){
+										if(instance===null){
+											cb(null,null);
+										}else{
+											cb(null,instance);
+										}
+									})
+							});
+						}
+
+						else{ //posts he liked is not 10, 30, or 50
+							Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin}, //update postLikedNow, and poin +3
+							function(err,info){
+								Employee.findOne({where:{id: employeeId}},
+									function(err,instance){
+										if(instance===null){
+											cb(null,null);
+										}else{
+											cb(null,instance);
+										}
+									})
+							});
+						}						
 					}
 				}				
 			});
 	};
 
 	Employee.addUnlike = function(employeeId, postId, cb){
-		Employee.findOne({fields: {postLiked: true}, where:{id: employeeId}},
+		Employee.findOne({where:{id: employeeId}},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
 				}else{
-					data = instance['postLiked']; //get every posts he has liked
-					postLikedNow = data.toString(); //store all post he has liked now to string
+					dataPostLiked = instance['postLiked']; //get every posts he has liked
+					postLikedNow = dataPostLiked.toString(); //store all post he has liked now to string
+					dataPoin = instance['poin'];
+					dataPoin = dataPoin-3;
 					//if the postId is in mid
 					if(postLikedNow.includes(postId + ',')){
 						postLikedNow = postLikedNow.replace(postId + ',','');
@@ -76,7 +172,7 @@ module.exports = function(Employee) {
 					else {						
 						postLikedNow = postLikedNow.replace(postId,'');
 					}
-					Employee.updateAll({id: employeeId}, {postLiked: postLikedNow}, //update
+					Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin}, //update
 					function(err,info){
 						Employee.findOne({where:{id: employeeId}},
 							function(err,instance){
@@ -111,8 +207,11 @@ module.exports = function(Employee) {
 				if(instance===null){
 					cb(null,null);
 				}else{
-					data = instance['postSeen']; //get every posts he has seen
-					postSeenNow = data.toString();
+					dataPostseen = instance['postSeen']; //get every posts he has seen
+					postSeenNow = dataPostseen.toString();
+					dataPoin = instance['poin']; //get every poin he got
+					dataPoin = dataPoin+1;
+					dataBadges = instance['badges']; //get every badges he achieved
 					//if postId has been seen
 					if(postSeenNow.includes(postId)){
 						cb(null,instance);
@@ -120,7 +219,7 @@ module.exports = function(Employee) {
 					//if this is the first post he see
 					else if(postSeenNow === ''){
 						postSeenNow = postId;
-						Employee.updateAll({id: employeeId}, {postSeen: postSeenNow}, //update
+						Employee.updateAll({id: employeeId}, {postSeen: postSeenNow, poin: dataPoin}, //update
 						function(err,info){
 							Employee.findOne({where:{id: employeeId}},
 								function(err,instance){
@@ -135,20 +234,93 @@ module.exports = function(Employee) {
 					//it's only the last post he's seen
 					else{
 						postSeenNow = postSeenNow + ',' + postId;
-						Employee.updateAll({id: employeeId}, {postSeen: postSeenNow}, //update
-						function(err,info){
-							Employee.findOne({where:{id: employeeId}},
-								function(err,instance){
-									if(instance===null){
-										cb(null,null);
-									}else{
-										cb(null,instance);
-									}
-								})
-						});
-					}
-				}				
-			});
+						splitPostSeen = postSeenNow.split(','); //split
+						counterSeen = splitPostSeen.length;
+						if(counterSeen==10){
+							date = new Date();
+							dateJSON = date.toJSON();
+							// if this is the first badge
+							if (dataBadges.toString()==="[{}]"){
+								newBadge = '{"badgeName" : "The Most Seeing Eye [BRONZE]", "achieved_date" : "'+dateJSON+'"}';
+								Employee.updateAll({id:employeeId}, {postSeen: postSeenNow, poin: dataPoin, badges: '['+newBadge+']'}, // update postSeenNow, poin+1, new Badge
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}},
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											}else{
+												cb(null,instance);
+											}
+										})
+								});
+							} else {
+								newBadge = '{"badgeName": "The Most Seeing Eye [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+								dataBadges.push(JSON.parse(newBadge));
+								badgesNow = dataBadges.toString();
+								Employee.updateAll({id:employeeId}, {postSeen: postSeenNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, newBadge
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}}, 
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											} else {
+												cb(null, instance);
+											}
+										})
+								});
+							}
+						}
+						else if (counterSeen==30){
+								date = new Date();
+								dateJSON = date.toJSON();
+								newBadge = '{"badgeName": "The Most Seeing Eye [SILVER]", "achieved_date": "'+dateJSON+'"}';
+								dataBadges.push(JSON.parse(newBadge)); // add new badge
+								badgesNow = dataBadges.toString();
+								Employee.updateAll({id:employeeId}, {postSeen:postSeenNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new Badge
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}}, 
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											} else {
+												cb(null, instance);
+											}
+										})
+								});
+						} else if (counterSeen==50){
+								date = new Date();
+								dateJSON = date.toJSON();
+								newBadge = '{"badgeName": "The Most Seeing Eye[GOLD]", "achieved_date": "'+dateJSON+'"}';
+								dataBadges.push(JSON.parse(newBadge)); // add new badge
+								badgesNow = dataBadges.toString();
+								Employee.updateAll({id:employeeId}, {postSeen:postSeenNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new Badge
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}}, 
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											} else {
+												cb(null, instance);
+											}
+										})
+								});
+						} else {
+							Employee.updateAll({id:employeeId}, {postSeen:postSeenNow, poin: dataPoin}, // update postSeenNow, poin+1
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}}, 
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											} else {
+												cb(null, instance);
+											}
+										})
+								});
+						}
+					}			
+				}
+
+		});
 	};
 
 	Employee.seenCounter = function(employeeId, cb){
@@ -173,6 +345,9 @@ module.exports = function(Employee) {
 				}else{
 					data = instance['postShared']; //get every posts he has shared
 					postSharedNow = data.toString();
+					dataPoin = instance['poin']; //get every poin he got
+					dataPoin = dataPoin+7;
+					dataBadges = instance['badges']; //get every badges he achieved
 					//if postId has been shared
 					if(postSharedNow.includes(postId)){
 						cb(null,instance);
@@ -180,7 +355,7 @@ module.exports = function(Employee) {
 					//if this is the first post he share
 					else if(postSharedNow === ''){
 						postSharedNow = postId;
-						Employee.updateAll({id: employeeId}, {postShared: postSharedNow}, //update
+						Employee.updateAll({id: employeeId}, {postShared: postSharedNow, poin:dataPoin}, //update
 						function(err,info){
 							Employee.findOne({where:{id: employeeId}},
 								function(err,instance){
@@ -195,18 +370,89 @@ module.exports = function(Employee) {
 					//it's only the last post he's shared
 					else{
 						postSharedNow = postSharedNow + ',' + postId;
-						Employee.updateAll({id: employeeId}, {postShared: postSharedNow}, //update
-						function(err,info){
-							Employee.findOne({where:{id: employeeId}},
-								function(err,instance){
-									if(instance===null){
-										cb(null,null);
-									}else{
-										cb(null,instance);
-									}
-								})
-						});
-					}
+						splitPostShared = postSharedNow.split(','); //split
+						counterShared = splitPostShared.length;
+						if(counterShared==10){
+							date = new Date();
+							dateJSON = date.toJSON();
+								if (dataBadges.toString()==="[{}]"){
+									newBadge = '{"badgeName" : "The Human Handbook [BRONZE]", "achieved_date" : "'+dateJSON+'"}';
+									Employee.updateAll({id:employeeId}, {postShared: postSharedNow, poin: dataPoin, badges: '['+newBadge+']'}, // update postSharedNow, poin+1, new Badge
+									function(err,info){
+										Employee.findOne({where:{id: employeeId}},
+											function(err,instance){
+												if(instance===null){
+													cb(null,null);
+												}else{
+													cb(null,instance);
+												}
+											})
+									});
+								} else {
+									newBadge = '{"badgeName": "The Human Handbook [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+									dataBadges.push(JSON.parse(newBadge));
+									badgesNow = dataBadges.toString();
+									Employee.updateAll({id:employeeId}, {postShared: postSharedNow, poin: dataPoin, badges: badgesNow}, // update postSharedNow, poin+1, newBadge
+									function(err,info){
+										Employee.findOne({where:{id: employeeId}}, 
+											function(err,instance){
+												if(instance===null){
+													cb(null,null);
+												} else {
+													cb(null, instance);
+												}
+											})
+									});
+								}
+						}
+						else if (counterShared==30){
+								date = new Date();
+								dateJSON = date.toJSON();
+								newBadge = '{"badgeName": "The Human Handbook [SILVER]", "achieved_date": "'+dateJSON+'"}';
+								dataBadges.push(JSON.parse(newBadge)); // add new badge
+								badgesNow = dataBadges.toString();
+								Employee.updateAll({id:employeeId}, {postShared:postSharedNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new adge
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}}, 
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											} else {
+												cb(null, instance);
+											}
+										})
+								});
+						} else if (counterShared==50){
+							date = new Date();
+							dateJSON = date.toJSON();
+							newBadge = '{"badgeName": "The Human Handbook[GOLD]", "achieved_date": "'+dateJSON+'"}';
+							dataBadges.push(JSON.parse(newBadge)); // add new badge
+							badgesNow = dataBadges.toString();
+							Employee.updateAll({id:employeeId}, {postShared:postSharedNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new Badge
+							function(err,info){
+								Employee.findOne({where:{id: employeeId}}, 
+									function(err,instance){
+										if(instance===null){
+											cb(null,null);
+										} else {
+											cb(null, instance);
+										}
+									})
+							});
+						} else {
+							Employee.updateAll({id:employeeId}, {postShared:postSharedNow, poin: dataPoin}, // update postSeenNow, poin+1
+								function(err,info){
+									Employee.findOne({where:{id: employeeId}}, 
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											} else {
+												cb(null, instance);
+											}
+										})
+								});
+						}
+					}		
 				}				
 			});
 	};
@@ -232,6 +478,15 @@ module.exports = function(Employee) {
 			returns: {arg: 'id', type: 'string', root: true},
 			http: {path: '/getName', verb: 'get', source: 'query'},
 			description: "Get employee name by id"
+		}
+	);
+
+	Employee.remoteMethod(
+		'getLeaderboard',
+		{
+			returns: {arg: 'id', type: 'string', root: true},
+			http: {path: '/getLeaderboard', verb: 'get', source: 'query'},
+			description: "Get leaderboard of all employees"
 		}
 	);
 
