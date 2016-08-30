@@ -11,7 +11,7 @@ module.exports = function(Employee) {
 	};
 
 	Employee.getLeaderboard = function(cb){
-		Employee.find({order: 'poin DESC'},
+		Employee.find({fields: {id: true, poin: true, badges: true, badgeCount: true}, order: 'poin DESC'},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
@@ -32,6 +32,7 @@ module.exports = function(Employee) {
 					dataPoin = instance['poin']; //get every poin he got
 					dataPoin = dataPoin+3;
 					dataBadges = instance['badges']; //get every badges he achieved
+					badgeCount = instance['badgeCount']
 					// if postId has been liked
 					if(postLikedNow.includes(postId)){
 						cb("Post id has been registered, you cannot like a post twice");
@@ -64,7 +65,8 @@ module.exports = function(Employee) {
 							//if this is the first badge he got
 							if(dataBadges.toString()==="[{}]"){
 								newBadge = '{"badgeName": "The Twin Thumbs Up [BRONZE]", "achieved_date": "'+dateJSON+'"}';
-								Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: '['+newBadge+']'}, //update postLikedNow, poin +3, newBadge
+								badgeCount = badgeCount+1;
+								Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: '['+newBadge+']', badgeCount: badgeCount}, //update postLikedNow, poin +3, newBadge
 								function(err,info){
 									Employee.findOne({where:{id: employeeId}},
 										function(err,instance){
@@ -77,9 +79,10 @@ module.exports = function(Employee) {
 								});
 							}else{ //last badge to achieve
 								newBadge = '{"badgeName": "The Twin Thumbs Up [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+								badgeCount = badgeCount+1;
 								dataBadges.push(JSON.parse(newBadge));
 								badgesNow = dataBadges.toString();
-								Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow}, //update postLikedNow, poin +3, newBadge
+								Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, //update postLikedNow, poin +3, newBadge
 								function(err,info){
 									Employee.findOne({where:{id: employeeId}},
 										function(err,instance){
@@ -98,9 +101,10 @@ module.exports = function(Employee) {
 							//since it's impossible to get silver badge without bronze first, we didn't include the first badge he got
 							 //last badge to achieve
 							newBadge = '{"badgeName": "The Twin Thumbs Up [SILVER]", "achieved_date": "'+dateJSON+'"}';
+							badgeCount = badgeCount+1;	
 							dataBadges.push(JSON.parse(newBadge));
 							badgesNow = dataBadges.toString();
-							Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow}, //update postLikedNow, poin +3, newBadge
+							Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, //update postLikedNow, poin +3, newBadge
 							function(err,info){
 								Employee.findOne({where:{id: employeeId}},
 									function(err,instance){
@@ -117,9 +121,10 @@ module.exports = function(Employee) {
 							//since it's impossible to get bold badge without bronze or silver first, we didn't include the first badge he got
 							 //last badge to achieve
 							newBadge = '{"badgeName": "The Twin Thumbs Up [GOLD]", "achieved_date": "'+dateJSON+'"}';
+							badgeCount = badgeCount+1;
 							dataBadges.push(JSON.parse(newBadge));
 							badgesNow = dataBadges.toString();
-							Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow}, //update postLikedNow, poin +3, newBadge
+							Employee.updateAll({id: employeeId}, {postLiked: postLikedNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, //update postLikedNow, poin +3, newBadge
 							function(err,info){
 								Employee.findOne({where:{id: employeeId}},
 									function(err,instance){
@@ -212,6 +217,7 @@ module.exports = function(Employee) {
 					dataPoin = instance['poin']; //get every poin he got
 					dataPoin = dataPoin+1;
 					dataBadges = instance['badges']; //get every badges he achieved
+					badgeCount = instance['badgeCount'];
 					//if postId has been seen
 					if(postSeenNow.includes(postId)){
 						cb(null,instance);
@@ -242,7 +248,8 @@ module.exports = function(Employee) {
 							// if this is the first badge
 							if (dataBadges.toString()==="[{}]"){
 								newBadge = '{"badgeName" : "The Most Seeing Eye [BRONZE]", "achieved_date" : "'+dateJSON+'"}';
-								Employee.updateAll({id:employeeId}, {postSeen: postSeenNow, poin: dataPoin, badges: '['+newBadge+']'}, // update postSeenNow, poin+1, new Badge
+								badgeCount = badgeCount+1;
+								Employee.updateAll({id:employeeId}, {postSeen: postSeenNow, poin: dataPoin, badges: '['+newBadge+']', badgeCount: badgeCount}, // update postSeenNow, poin+1, new Badge
 								function(err,info){
 									Employee.findOne({where:{id: employeeId}},
 										function(err,instance){
@@ -255,9 +262,10 @@ module.exports = function(Employee) {
 								});
 							} else {
 								newBadge = '{"badgeName": "The Most Seeing Eye [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+								badgeCount = badgeCount+1;
 								dataBadges.push(JSON.parse(newBadge));
 								badgesNow = dataBadges.toString();
-								Employee.updateAll({id:employeeId}, {postSeen: postSeenNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, newBadge
+								Employee.updateAll({id:employeeId}, {postSeen: postSeenNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, // update postSeenNow, poin+1, newBadge
 								function(err,info){
 									Employee.findOne({where:{id: employeeId}}, 
 										function(err,instance){
@@ -274,9 +282,10 @@ module.exports = function(Employee) {
 								date = new Date();
 								dateJSON = date.toJSON();
 								newBadge = '{"badgeName": "The Most Seeing Eye [SILVER]", "achieved_date": "'+dateJSON+'"}';
+								badgeCount = badgeCount+1;
 								dataBadges.push(JSON.parse(newBadge)); // add new badge
 								badgesNow = dataBadges.toString();
-								Employee.updateAll({id:employeeId}, {postSeen:postSeenNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new Badge
+								Employee.updateAll({id:employeeId}, {postSeen:postSeenNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, // update postSeenNow, poin+1, new Badge
 								function(err,info){
 									Employee.findOne({where:{id: employeeId}}, 
 										function(err,instance){
@@ -291,9 +300,10 @@ module.exports = function(Employee) {
 								date = new Date();
 								dateJSON = date.toJSON();
 								newBadge = '{"badgeName": "The Most Seeing Eye[GOLD]", "achieved_date": "'+dateJSON+'"}';
+								badgeCount = badgeCount+1;
 								dataBadges.push(JSON.parse(newBadge)); // add new badge
 								badgesNow = dataBadges.toString();
-								Employee.updateAll({id:employeeId}, {postSeen:postSeenNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new Badge
+								Employee.updateAll({id:employeeId}, {postSeen:postSeenNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, // update postSeenNow, poin+1, new Badge
 								function(err,info){
 									Employee.findOne({where:{id: employeeId}}, 
 										function(err,instance){
@@ -348,6 +358,7 @@ module.exports = function(Employee) {
 					dataPoin = instance['poin']; //get every poin he got
 					dataPoin = dataPoin+7;
 					dataBadges = instance['badges']; //get every badges he achieved
+					badgeCount = instance['badgeCount'];
 					//if postId has been shared
 					if(postSharedNow.includes(postId)){
 						cb(null,instance);
@@ -377,7 +388,8 @@ module.exports = function(Employee) {
 							dateJSON = date.toJSON();
 								if (dataBadges.toString()==="[{}]"){
 									newBadge = '{"badgeName" : "The Human Handbook [BRONZE]", "achieved_date" : "'+dateJSON+'"}';
-									Employee.updateAll({id:employeeId}, {postShared: postSharedNow, poin: dataPoin, badges: '['+newBadge+']'}, // update postSharedNow, poin+1, new Badge
+									badgeCount = badgeCount+1;
+									Employee.updateAll({id:employeeId}, {postShared: postSharedNow, poin: dataPoin, badges: '['+newBadge+']', badgeCount: badgeCount}, // update postSharedNow, poin+1, new Badge
 									function(err,info){
 										Employee.findOne({where:{id: employeeId}},
 											function(err,instance){
@@ -390,9 +402,10 @@ module.exports = function(Employee) {
 									});
 								} else {
 									newBadge = '{"badgeName": "The Human Handbook [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+									badgeCount = badgeCount+1;
 									dataBadges.push(JSON.parse(newBadge));
 									badgesNow = dataBadges.toString();
-									Employee.updateAll({id:employeeId}, {postShared: postSharedNow, poin: dataPoin, badges: badgesNow}, // update postSharedNow, poin+1, newBadge
+									Employee.updateAll({id:employeeId}, {postShared: postSharedNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, // update postSharedNow, poin+1, newBadge
 									function(err,info){
 										Employee.findOne({where:{id: employeeId}}, 
 											function(err,instance){
@@ -409,9 +422,10 @@ module.exports = function(Employee) {
 								date = new Date();
 								dateJSON = date.toJSON();
 								newBadge = '{"badgeName": "The Human Handbook [SILVER]", "achieved_date": "'+dateJSON+'"}';
+								badgeCount = badgeCount+1;
 								dataBadges.push(JSON.parse(newBadge)); // add new badge
 								badgesNow = dataBadges.toString();
-								Employee.updateAll({id:employeeId}, {postShared:postSharedNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new adge
+								Employee.updateAll({id:employeeId}, {postShared:postSharedNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, // update postSeenNow, poin+1, new adge
 								function(err,info){
 									Employee.findOne({where:{id: employeeId}}, 
 										function(err,instance){
@@ -426,9 +440,10 @@ module.exports = function(Employee) {
 							date = new Date();
 							dateJSON = date.toJSON();
 							newBadge = '{"badgeName": "The Human Handbook[GOLD]", "achieved_date": "'+dateJSON+'"}';
+							badgeCount = badgeCount+1;
 							dataBadges.push(JSON.parse(newBadge)); // add new badge
 							badgesNow = dataBadges.toString();
-							Employee.updateAll({id:employeeId}, {postShared:postSharedNow, poin: dataPoin, badges: badgesNow}, // update postSeenNow, poin+1, new Badge
+							Employee.updateAll({id:employeeId}, {postShared:postSharedNow, poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, // update postSeenNow, poin+1, new Badge
 							function(err,info){
 								Employee.findOne({where:{id: employeeId}}, 
 									function(err,instance){
