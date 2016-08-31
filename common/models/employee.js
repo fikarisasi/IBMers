@@ -19,7 +19,137 @@ module.exports = function(Employee) {
 					cb(null,instance);
 				}
 			});
-	}
+	};
+
+	Employee.addComment = function(postId, employeeId, employeeName, content, cb){
+		var EmployeeComment = Employee.app.models.Comment;
+		date = new Date();
+		dateJSON = date.toJSON();
+		EmployeeComment.create({postId: postId, employeeId: employeeId, employeeName: employeeName, content: content, date: dateJSON},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					commentInstance = instance;
+					console.log(commentInstance);
+					// cb(null,instance);
+					Employee.findOne({where: {id: employeeId}},
+					function(err,instance){
+						if(instance===null){
+							cb(null,null);
+						}else{
+							// cb(null,commentInstance,employeeInstance);
+							dataPoin = instance['poin']; //get every poin he got
+							dataPoin = dataPoin+5;
+							dataBadges = instance['badges']; //get every badges he achieved
+							badgeCount = instance['badgeCount'];
+							counterComment = 0;
+							EmployeeComment.count({employeeId: employeeId},
+								function(err, count){
+									counterComment = count;
+									console.log(counterComment);
+									if(counterComment==10){
+										//if this is the first badge he got
+										if(dataBadges.toString()==="[{}]"){
+											newBadge = '{"badgeName": "The Aspiring Handwriting [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+											badgeCount = badgeCount+1;
+											Employee.updateAll({id: employeeId}, {poin: dataPoin, badges: '['+newBadge+']', badgeCount: badgeCount}, //update poin +5, newBadge
+											function(err,info){
+												Employee.findOne({where:{id: employeeId}},
+													function(err,instance){
+														if(instance===null){
+															cb(null,null);
+														}else{
+															employeeInstance = instance;
+															console.log(employeeInstance);
+															cb(null,commentInstance,employeeInstance);
+														}
+													})
+											});
+										}else{ //last badge to achieve
+											newBadge = '{"badgeName": "The Aspiring Handwriting [BRONZE]", "achieved_date": "'+dateJSON+'"}';
+											badgeCount = badgeCount+1;
+											dataBadges.push(JSON.parse(newBadge));
+											badgesNow = dataBadges.toString();
+											Employee.updateAll({id: employeeId}, {poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, //update poin +5, newBadge
+											function(err,info){
+												Employee.findOne({where:{id: employeeId}},
+													function(err,instance){
+														if(instance===null){
+															cb(null,null);
+														}else{
+															employeeInstance = instance;
+															console.log(employeeInstance);
+															cb(null,commentInstance,employeeInstance);
+														}
+													})
+											});
+										}
+										
+									}else if(counterComment==30){ //if he has commented has been 30, he get silver
+										//since it's impossible to get silver badge without bronze first, we didn't include the first badge he got
+										 //last badge to achieve
+										newBadge = '{"badgeName": "The Aspiring Handwriting [SILVER]", "achieved_date": "'+dateJSON+'"}';
+										badgeCount = badgeCount+1;	
+										dataBadges.push(JSON.parse(newBadge));
+										badgesNow = dataBadges.toString();
+										Employee.updateAll({id: employeeId}, {poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, //update poin +5, newBadge
+										function(err,info){
+											Employee.findOne({where:{id: employeeId}},
+												function(err,instance){
+													if(instance===null){
+														cb(null,null);
+													}else{
+														employeeInstance = instance;
+														console.log(employeeInstance);
+														cb(null,commentInstance,employeeInstance);
+													}
+												})
+										});
+									}else if(counterComment==50){ //if posts he liked has been 50, he get gold
+										//since it's impossible to get bold badge without bronze or silver first, we didn't include the first badge he got
+										 //last badge to achieve
+										newBadge = '{"badgeName": "The Aspiring Handwriting [GOLD]", "achieved_date": "'+dateJSON+'"}';
+										badgeCount = badgeCount+1;
+										dataBadges.push(JSON.parse(newBadge));
+										badgesNow = dataBadges.toString();
+										Employee.updateAll({id: employeeId}, {poin: dataPoin, badges: badgesNow, badgeCount: badgeCount}, //update poin +5, newBadge
+										function(err,info){
+											Employee.findOne({where:{id: employeeId}},
+												function(err,instance){
+													if(instance===null){
+														cb(null,null);
+													}else{
+														employeeInstance = instance;
+														console.log(employeeInstance);
+														cb(null,commentInstance,employeeInstance);
+													}
+												})
+										});
+									}
+
+									else{ //posts he liked is not 10, 30, or 50
+										Employee.updateAll({id: employeeId}, {poin: dataPoin}, //update and poin +5
+										function(err,info){
+											Employee.findOne({where:{id: employeeId}},
+												function(err,instance){
+													if(instance===null){
+														cb(null,null);
+													}else{
+														employeeInstance = instance;
+														console.log(employeeInstance);
+														cb(null,commentInstance,employeeInstance);
+													}
+												})
+										});
+									}
+								})
+							// cb(null,instance);
+						}
+					});
+				}
+			});
+	};
 
 	Employee.addLike = function(employeeId, postId, cb){
 		Employee.findOne({where:{id: employeeId}},
@@ -32,7 +162,7 @@ module.exports = function(Employee) {
 					dataPoin = instance['poin']; //get every poin he got
 					dataPoin = dataPoin+3;
 					dataBadges = instance['badges']; //get every badges he achieved
-					badgeCount = instance['badgeCount']
+					badgeCount = instance['badgeCount'];
 					// if postId has been liked
 					if(postLikedNow.includes(postId)){
 						cb("Post id has been registered, you cannot like a post twice");
@@ -544,6 +674,23 @@ module.exports = function(Employee) {
 			returns: {arg: 'id', type: 'string', root: true},
 			http: {path: '/getLeaderboard', verb: 'get', source: 'query'},
 			description: "Get leaderboard of all employees"
+		}
+	);
+
+	Employee.remoteMethod(
+		'addComment',
+		{
+			accepts: [
+					{arg: 'postId', type: 'string'},
+					{arg: 'employeeId', type: 'string'},
+					{arg: 'employeeName', type: 'string'},
+					{arg: 'content', type: 'string'}
+					],
+			returns: [
+					{arg: 'comment', type: 'string'},
+					{arg: 'employee', type: 'string'}
+					],
+			http: {path: '/addComment', verb: 'put', source: 'query'}
 		}
 	);
 

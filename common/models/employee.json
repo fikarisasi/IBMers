@@ -80,6 +80,13 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "ALLOW",
+      "property": "addComment"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
       "property": "addLike"
     },
     {
