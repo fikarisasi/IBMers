@@ -1,6 +1,6 @@
 module.exports = function(Employee) {
-	Employee.getName = function(id, cb){
-		Employee.findOne({fields: {name: true}, where:{id:id}},
+	Employee.getEmployee = function(username, cb){
+		Employee.findOne({fields: {id: false}, where:{username:username}},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
@@ -659,12 +659,12 @@ module.exports = function(Employee) {
 	};
 
 	Employee.remoteMethod(
-		'getName',
+		'getEmployee',
 		{
-			accepts: {arg: 'id', type: 'string'},
+			accepts: {arg: 'username', type: 'string'},
 			returns: {arg: 'id', type: 'string', root: true},
-			http: {path: '/getName', verb: 'get', source: 'query'},
-			description: "Get employee name by id"
+			http: {path: '/getEmployee', verb: 'get', source: 'query'},
+			description: "Get employee instance by username"
 		}
 	);
 
