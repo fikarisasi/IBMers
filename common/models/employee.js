@@ -21,6 +21,17 @@ module.exports = function(Employee) {
 			});
 	};
 
+	Employee.getContacts = function(cb){
+		Employee.find({fields: {id:true, username: true, name: true}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					cb(null,instance);
+				}
+			});
+	};
+
 	Employee.addComment = function(postId, employeeId, employeeName, content, cb){
 		var EmployeeComment = Employee.app.models.Comment;
 		date = new Date();
@@ -665,6 +676,17 @@ module.exports = function(Employee) {
 			returns: {arg: 'id', type: 'string', root: true},
 			http: {path: '/getEmployee', verb: 'get', source: 'query'},
 			description: "Get employee instance by username"
+		}
+	);
+
+
+	Employee.remoteMethod(
+		'getContacts',
+		{
+			// accepts: {arg: 'id', type: 'string'},
+			returns: {arg: 'id', type: 'string', root: true},
+			http: {path: '/getContacts', verb: 'get', source: 'query'},
+			// description: "G"
 		}
 	);
 
