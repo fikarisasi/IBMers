@@ -348,6 +348,67 @@ module.exports = function(Post) {
 				}
 			});
 	};
+	
+	Post.addPost = function(data, cb){
+		// console.log(category);
+		// date = new Date();
+		// dateJSON = date.toJSON();
+		Post.create(data,
+			function(err, instance){
+				if(instance===null){
+					cb(null, null);
+				}else {
+					if(instance['priority']==="true"){
+						var sendNotification = function(data) {
+						  var headers = {
+						    "Content-Type": "application/json",
+						    "Authorization": "Basic YzIxZTYwOWEtNmU3Zi00ZTZiLTlhZWEtYjFjYTRhMjA3NzMy"
+						  };
+						  
+						  var options = {
+						    host: "onesignal.com",
+						    port: 443,
+						    path: "/api/v1/notifications",
+						    method: "POST",
+						    headers: headers
+						  };
+						  
+						  var https = require('https');
+						  var req = https.request(options, function(res) {  
+						    res.on('data', function(data) {
+						      console.log("Response:");
+						      console.log(JSON.parse(data));
+						      // console.log(JSON.parse(data));
+						    });
+						  });
+						  
+						  req.on('error', function(e) {
+						    console.log("ERROR:");
+						    console.log(e);
+						  });
+						  
+						  req.write(JSON.stringify(data));
+						  req.end();
+						};
+
+						var message = { 
+						  app_id: "0010ee59-1672-4d84-acaf-2256df52939c",
+						  contents: {"en": "There is an important post for you. Let's see it!"},
+						  included_segments: ["All"],
+						  isAndroid: true
+						};
+
+						sendNotification(message);
+						// console.log(instance);
+						cb(null, instance);
+					}else{
+						cb(null, instance);
+					}
+					
+				}
+			})
+		
+	}
 
 	Post.remoteMethod(
 		'getPostByRole',
@@ -460,6 +521,16 @@ module.exports = function(Post) {
 			returns: {arg: 'count', type: 'number'},
 			http: {path: '/sharerCounter', verb: 'get', source: 'query'},
 			description: "Get how many Employee who share post{id}"
+		}
+	);
+
+	Post.remoteMethod(
+		'addPost',
+		{
+			accepts: {arg: 'data', type: 'object', http: {source: 'body'}},
+			returns: {type: 'string', root: true},
+			http: {path: '/addPost', verb: 'post', source: 'query'},
+			description: "Adding a post"
 		}
 	);
 };
