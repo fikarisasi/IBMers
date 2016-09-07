@@ -411,60 +411,113 @@ module.exports = function(Post) {
 	}
 
 	Post.getMostLikedPost = function(cb){
-		Post.find({id:true},
+		Post.find({},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
 				} else {
-					var total = [];
-					for(var count in instance){
-						var data = [];
-						data = instance[count]['liker'].split(",");
-						total [count] = data.length;
+					var total = []; 
+					for(var i in instance){
+						var data = []; 
+						data = instance[i]['liker'].split(","); // split liker with comma
+						total [i] = data.length;
 					}
 
-					var max = 0;
-					var int_result;
-					for (var count in total){
-						if(total[count] > max){
-							max = total[count];
-							int_result = count;
+					// search most liked post
+					var max = 0;  
+					var result; // collecting index of total
+					for (var i in total){
+						if(total[i] > max){ // if max less than max, then total replace the value of max
+							max = total[i]; 
+							result = i; // index of most liked post
 						}
 					}
-					var result = [];
-					result.push(instance[int_result]);
-					// console.log(instance[result]);
-					cb(null,result);
+					
+					cb(null,instance[result]);
 				}
 			}
 		);
 	}
 
 	Post.getMostSharedPost = function(cb){
-		Post.find({id:true},
+		Post.find({},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
 				} else {
-					var total = [];
-					for(var count in instance){
+					var total = []; 
+					for(var i in instance){
 						var data = [];
-						data = instance[count]['sharer'].split(",");
-						total [count] = data.length;
+						data = instance[i]['sharer'].split(",");
+						total [i] = data.length;
 					}
 
 					var max = 0;
-					var int_result;
-					for (var count in total){
-						if(total[count] > max){
-							max = total[count];
-							int_result = count;
+					var result;
+					for (var i in total){
+						if(total[i] > max){
+							max = total[i];
+							result = i;
 						}
 					}
-					var result = [];
-					result.push(instance[int_result]);
-					// console.log(instance[result]);
-					cb(null,result);
+					
+					cb(null,instance[result]);
+				}
+			}
+		);
+	}
+
+	Post.getMostCommentedPost = function(cb){
+		var PostComment = Post.app.models.Comment;
+		PostComment.find({order: 'postId DESC'},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				} else {
+					var postIds = []; 
+					for(postId in instance){
+						postIds.push(instance[postId]['postId']); // collecting all postId of post					
+					}
+
+					var count = []; 
+					var index = -1;
+					var temp = [];
+					for (var a in postIds){ 
+						if (postIds[a-1] != "undefined"){ // from second element until the last element of postIds
+							if (postIds[a] === postIds[a-1]){ 
+								count[index]++;
+							} else { // find new postId
+								index++;
+								temp.push(postIds[a]);
+								count[index] = 1;
+							}
+						} else { // the first element
+							index++;
+							temp.push(postIds[a]);
+							count[index] = 1;
+						}
+					}
+
+					// search the most commented post
+					var max = 0;
+					for (var i in count){
+						if(count[i] > max){
+							max = count[i];
+							result = i;
+						}
+					}
+
+					// get all data of post by postId
+					Post.findOne({where : {id : postIds[result]}},
+						function(err,instance){
+							if(instance===null){
+								cb(null,null);
+							} else {
+								cb(null, instance); // return the most commented post
+							}
+					});
+					
+					
 				}
 			}
 		);
@@ -607,8 +660,16 @@ module.exports = function(Post) {
 		'getMostSharedPost',
 		{
 			returns: {type: 'string', root: true},
-			http: {path: '/getMostSharedPost', verb: 'post', source: 'query'},
-			description: "Get most liked post"
+			http: {path: '/getMostSharedPost', verb: 'post', source: 'query'}
 		}
 	);
+
+	Post.remoteMethod(
+		'getMostCommentedPost',
+		{
+			returns: {type: 'string', root: true},
+			http: {path: '/getMostCommentedPost', verb: 'post', source: 'query'}
+		}
+	);
+
 };
