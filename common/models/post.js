@@ -419,13 +419,17 @@ module.exports = function(Post) {
 					var total = []; 
 					for(var i in instance){
 						var data = []; 
-						data = instance[i]['liker'].split(","); // split liker with comma
-						total [i] = data.length;
+						if (instance[i]['liker'] != ""){  // if liker is empty 
+							data = instance[i]['liker'].split(","); // split liker with comma
+							total [i] = data.length;
+						} else {
+							total [i] = 0;
+						}
 					}
 
 					// search most liked post
 					var max = 0;  
-					var result; // collecting index of total
+					var result; // index of most liked post
 					for (var i in total){
 						if(total[i] > max){ // if max less than max, then total replace the value of max
 							max = total[i]; 
@@ -446,14 +450,19 @@ module.exports = function(Post) {
 					cb(null,null);
 				} else {
 					var total = []; 
+					// console.log(instance);
 					for(var i in instance){
 						var data = [];
-						data = instance[i]['sharer'].split(",");
-						total [i] = data.length;
+						if(instance[i]['sharer'] != ""){ // if sharer is empty
+							data = instance[i]['sharer'].split(",");
+							total [i] = data.length;
+						} else {
+							total [i] = 0;
+						}
 					}
 
 					var max = 0;
-					var result;
+					var result; // index of most shared post
 					for (var i in total){
 						if(total[i] > max){
 							max = total[i];
@@ -461,6 +470,7 @@ module.exports = function(Post) {
 						}
 					}
 					
+					// console.log(result);
 					cb(null,instance[result]);
 				}
 			}
