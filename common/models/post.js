@@ -481,8 +481,9 @@ module.exports = function(Post) {
 		var PostComment = Post.app.models.Comment;
 		PostComment.find({order: 'postId DESC'},
 			function(err,instance){
-				if(instance===null){
-					cb(null,null);
+				// console.log(instance.length);
+				if(instance.length==0){
+					cb(null,[]);
 				} else {
 					var postIds = []; 
 					for(postId in instance){
@@ -516,6 +517,7 @@ module.exports = function(Post) {
 							result = i;
 						}
 					}
+					// console.log(instance);
 
 					// get all data of post by postId
 					Post.findOne({where : {id : postIds[result]}},
