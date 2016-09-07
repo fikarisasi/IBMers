@@ -410,6 +410,66 @@ module.exports = function(Post) {
 		
 	}
 
+	Post.getMostLikedPost = function(cb){
+		Post.find({id:true},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				} else {
+					var total = [];
+					for(var count in instance){
+						var data = [];
+						data = instance[count]['liker'].split(",");
+						total [count] = data.length;
+					}
+
+					var max = 0;
+					var int_result;
+					for (var count in total){
+						if(total[count] > max){
+							max = total[count];
+							int_result = count;
+						}
+					}
+					var result = [];
+					result.push(instance[int_result]);
+					// console.log(instance[result]);
+					cb(null,result);
+				}
+			}
+		);
+	}
+
+	Post.getMostSharedPost = function(cb){
+		Post.find({id:true},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				} else {
+					var total = [];
+					for(var count in instance){
+						var data = [];
+						data = instance[count]['sharer'].split(",");
+						total [count] = data.length;
+					}
+
+					var max = 0;
+					var int_result;
+					for (var count in total){
+						if(total[count] > max){
+							max = total[count];
+							int_result = count;
+						}
+					}
+					var result = [];
+					result.push(instance[int_result]);
+					// console.log(instance[result]);
+					cb(null,result);
+				}
+			}
+		);
+	}
+
 	Post.remoteMethod(
 		'getPostByRole',
 		{
@@ -531,6 +591,24 @@ module.exports = function(Post) {
 			returns: {type: 'string', root: true},
 			http: {path: '/addPost', verb: 'post', source: 'query'},
 			description: "Adding a post"
+		}
+	);
+
+	Post.remoteMethod(
+		'getMostLikedPost',
+		{
+			returns: {type: 'string', root: true},
+			http: {path: '/getMostLikedPost', verb: 'post', source: 'query'},
+			description: "Get most liked post"
+		}
+	);
+
+	Post.remoteMethod(
+		'getMostSharedPost',
+		{
+			returns: {type: 'string', root: true},
+			http: {path: '/getMostSharedPost', verb: 'post', source: 'query'},
+			description: "Get most liked post"
 		}
 	);
 };
