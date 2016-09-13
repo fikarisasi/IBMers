@@ -395,12 +395,13 @@ module.exports = function(Post) {
 						  app_id: "0010ee59-1672-4d84-acaf-2256df52939c",
 						  contents: {"en": "There is an important post for you. Let's see it!"},
 						  included_segments: ["All"],
-						  isAndroid: true
+						  isAndroid: true,
+						  postId: instance['id']
 						};
 
 						sendNotification(message);
 						// console.log(instance);
-						cb(null, instance);
+						cb(null, instance, message);
 					}else{
 						cb(null, instance);
 					}
@@ -653,7 +654,10 @@ module.exports = function(Post) {
 		'addPost',
 		{
 			accepts: {arg: 'data', type: 'object', http: {source: 'body'}},
-			returns: {type: 'string', root: true},
+			returns: [
+					{arg: 'dataPost', type: 'string'},
+					{arg: 'messagePush', type: 'string'}
+					],
 			http: {path: '/addPost', verb: 'post', source: 'query'},
 			description: "Adding a post"
 		}
