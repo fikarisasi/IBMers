@@ -396,7 +396,8 @@ module.exports = function(Post) {
 						  contents: {"en": "There is an important post for you. Let's see it!"},
 						  included_segments: ["All"],
 						  isAndroid: true,
-						  postId: instance['id']
+						  // postId: instance['id']
+						  data: {postId : instance['id']}
 						};
 
 						sendNotification(message);
