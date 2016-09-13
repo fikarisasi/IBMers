@@ -627,6 +627,20 @@ module.exports = function(Employee) {
 			});
 	};
 
+	Employee.saveOneSignalId = function(employeeId, oneSignalId, cb){
+		Employee.updateAll({id:employeeId}, {oneSignalId: oneSignalId},
+			function(err,info){
+				Employee.findOne({where:{id: employeeId}}, 
+					function(err,instance){
+						if(instance===null){
+							cb(null,null);
+						} else {
+							cb(null, instance);
+						}
+					})
+			});
+	}
+
 	Employee.updatePassword = function (ctx, email, oldPassword, newPassword, cb) {
 	  var newErrMsg, newErr;
 	  try {
@@ -791,6 +805,18 @@ module.exports = function(Employee) {
 					],
 			returns: {arg: 'postSeen', type: 'string', root: true},
 			http: {path: '/addShared', verb: 'put'}
+		}
+	);
+
+	Employee.remoteMethod(
+		'saveOneSignalId',
+		{
+			accepts: [
+					{arg: 'employeeId', type: 'string'},
+					{arg: 'oneSignalId', type: 'string'}
+					],
+			returns: {type: 'string', root: true},
+			http: {path: '/saveOneSignalId', verb: 'put'}
 		}
 	);
 
