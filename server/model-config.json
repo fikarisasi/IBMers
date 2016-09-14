@@ -62,5 +62,27 @@
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "Event": {
+    "dataSource": "cloudantNoSQLDB",
+    "public": true
+  },
+  "Ticket": {
+    "dataSource": "cloudantNoSQLDB",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "Category": {
+    "dataSource": "cloudantNoSQLDB",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "Division": {
+    "dataSource": "cloudantNoSQLDB",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   }
 }

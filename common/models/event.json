@@ -1,0 +1,42 @@
+{
+  "name": "Event",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "date_started": {
+      "type": "date"
+    },
+    "date_ended": {
+      "type": "date"
+    },
+    "title": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "contact_person": {
+      "type": "string"
+    },
+    "attendee": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "tickets": {
+      "type": "hasMany",
+      "model": "Ticket",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

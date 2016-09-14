@@ -51,7 +51,9 @@
     "badgeCount": {
       "type": "number"
     },
-    "oneSignalId": "string"
+    "oneSignalId": {
+      "type": "string"
+    }
   },
   "validations": [],
   "relations": {
