@@ -397,7 +397,7 @@ module.exports = function(Post) {
 						  included_segments: ["All"],
 						  isAndroid: true,
 						  // postId: instance['id']
-						  data: {postId : instance['id']}
+						  data: {postId : instance['id'], type: "post"}
 						};
 
 						sendNotification(message);
