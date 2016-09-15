@@ -61,6 +61,11 @@
       "type": "hasMany",
       "model": "Post",
       "foreignKey": ""
+    },
+    "tickets": {
+      "type": "hasMany",
+      "model": "Ticket",
+      "foreignKey": ""
     }
   },
   "acls": [

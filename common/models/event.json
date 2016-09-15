@@ -27,6 +27,9 @@
     },
     "attendee": {
       "type": "string"
+    },
+    "ticket_limit": {
+      "type": "number"
     }
   },
   "validations": [],
