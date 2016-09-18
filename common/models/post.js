@@ -350,59 +350,70 @@ module.exports = function(Post) {
 	};
 	
 	Post.addPost = function(data, cb){
-		// console.log(category);
-		// date = new Date();
-		// dateJSON = date.toJSON();
+		var Employee = Post.app.models.Employee;
 		Post.create(data,
 			function(err, instance){
 				if(instance===null){
 					cb(null, null);
 				}else {
 					if(instance['priority']==="true"){
-						var sendNotification = function(data) {
-						  var headers = {
-						    "Content-Type": "application/json",
-						    "Authorization": "Basic YzIxZTYwOWEtNmU3Zi00ZTZiLTlhZWEtYjFjYTRhMjA3NzMy"
-						  };
-						  
-						  var options = {
-						    host: "onesignal.com",
-						    port: 443,
-						    path: "/api/v1/notifications",
-						    method: "POST",
-						    headers: headers
-						  };
-						  
-						  var https = require('https');
-						  var req = https.request(options, function(res) {  
-						    res.on('data', function(data) {
-						      console.log("Response:");
-						      console.log(JSON.parse(data));
-						      // console.log(JSON.parse(data));
-						    });
-						  });
-						  
-						  req.on('error', function(e) {
-						    console.log("ERROR:");
-						    console.log(e);
-						  });
-						  
-						  req.write(JSON.stringify(data));
-						  req.end();
-						};
+						var postMessage = instance;
+						var employeeOneSignalId = [];
+						Employee.find({},
+							function(err, instance){
+								if(instance===null){
+									cb(null,null);
+								}else{
+									for(var employee in instance){
+										employeeOneSignalId.push(instance[employee]['oneSignalId'])
+									}
+									console.log(employeeOneSignalId);
+									var sendNotification = function(data) {
+									  var headers = {
+									    "Content-Type": "application/json",
+									    "Authorization": "Basic YzIxZTYwOWEtNmU3Zi00ZTZiLTlhZWEtYjFjYTRhMjA3NzMy"
+									  };
+									  
+									  var options = {
+									    host: "onesignal.com",
+									    port: 443,
+									    path: "/api/v1/notifications",
+									    method: "POST",
+									    headers: headers
+									  };
+									  
+									  var https = require('https');
+									  var req = https.request(options, function(res) {  
+									    res.on('data', function(data) {
+									      console.log("Response:");
+									      console.log(JSON.parse(data));
+									      // console.log(JSON.parse(data));
+									    });
+									  });
+									  
+									  req.on('error', function(e) {
+									    console.log("ERROR:");
+									    console.log(e);
+									  });
+									  
+									  req.write(JSON.stringify(data));
+									  req.end();
+									};
 
-						var message = { 
-						  app_id: "0010ee59-1672-4d84-acaf-2256df52939c",
-						  contents: {"en": "There is an important post for you. Let's see it!"},
-						  included_segments: ["All"],
-						  isAndroid: true,
-						  // postId: instance['id']
-						  data: {postId : instance['id'], type: "post"}
-						};
+									var message = { 
+									  app_id: "0010ee59-1672-4d84-acaf-2256df52939c",
+									  contents: {"en": "There is an important post for you. Let's see it!"},
+									  include_player_ids: employeeOneSignalId,
+									  isAndroid: true,
+									  // postId: instance['id']
+									  data: {postId : instance['id'], type: "post"}
+									};
 
-						sendNotification(message);
-						// console.log(instance);
-						cb(null, instance, message);
+									sendNotification(message);
+									// console.log(instance);
+									cb(null, postMessage, message);
+								}
+							})
 					}else{
 						cb(null, instance);
 					}
