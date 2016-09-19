@@ -403,7 +403,8 @@ module.exports = function(Post) {
 									var message = { 
 									  app_id: "0010ee59-1672-4d84-acaf-2256df52939c",
 									  contents: {"en": "There is an important post for you. Let's see it!"},
-									  include_player_ids: employeeOneSignalId,
+									  // include_player_ids: employeeOneSignalId,
+									  included_segments: ["All"],
 									  isAndroid: true,
 									  // postId: instance['id']
 									  data: {postId : instance['id'], type: "post"}
