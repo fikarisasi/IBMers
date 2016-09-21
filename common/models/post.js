@@ -1,15 +1,15 @@
 // save old method to getPostByRole
-// module.exports = function(Post) {
-// 	Post.getPostByRole = function(role,cb){
-// 		Post.find({where: {receiver: {like: role}}},
-// 			function(err,instance){
-// 				if(instance===null){
-// 					cb(null,null);
-// 				}else{
-// 					cb(null,instance);
-// 				}
-// 			});
-// 	};
+module.exports = function(Post) {
+	Post.getPostByRole = function(role,cb){
+		Post.find({where: {receiver: {like: role}}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					cb(null,instance);
+				}
+			});
+	};
 
 // 	Post.remoteMethod(
 // 		'getPostByRole',
@@ -24,40 +24,40 @@
 // 	);
 // };
 
-module.exports = function(Post) {
-	Post.getPostByRole = function(role,cb){
-		if(role === "div_all"){
-			Post.find({where: {or: [{or: [{div_all: true}, {div_jti: true}]}, {div_gbs: true}]}},
-			function(err,instance){
-				if(instance===null){
-					cb(null,null);
-				}else{
-					cb(null,instance);
-				}
-			});
-		}else if(role === "div_jti"){
-			Post.find({where: {div_jti: true}},
-			function(err,instance){
-				if(instance===null){
-					cb(null,null);
-				}else{
-					cb(null,instance);
-				}
-			});
-		}else if(role === "div_gbs"){
-			Post.find({where: {div_gbs: true}},
-			function(err,instance){
-				if(instance===null){
-					cb(null,null);
-				}else{
-					cb(null,instance);
-				}
-			});
-		}else {
-			cb(null,null);
-		}
+// module.exports = function(Post) {
+// 	Post.getPostByRole = function(role,cb){
+// 		if(role === "div_all"){
+// 			Post.find({where: {or: [{or: [{div_all: true}, {div_jti: true}]}, {div_gbs: true}]}},
+// 			function(err,instance){
+// 				if(instance===null){
+// 					cb(null,null);
+// 				}else{
+// 					cb(null,instance);
+// 				}
+// 			});
+// 		}else if(role === "div_jti"){
+// 			Post.find({where: {div_jti: true}},
+// 			function(err,instance){
+// 				if(instance===null){
+// 					cb(null,null);
+// 				}else{
+// 					cb(null,instance);
+// 				}
+// 			});
+// 		}else if(role === "div_gbs"){
+// 			Post.find({where: {div_gbs: true}},
+// 			function(err,instance){
+// 				if(instance===null){
+// 					cb(null,null);
+// 				}else{
+// 					cb(null,instance);
+// 				}
+// 			});
+// 		}else {
+// 			cb(null,null);
+// 		}
 		
-	};
+// 	};
 
 	Post.pagination = function(page, role, cb){
 		pagesize = page*10-10;
