@@ -1,7 +1,7 @@
 // save old method to getPostByRole
 module.exports = function(Post) {
 	Post.getPostByRole = function(role,cb){
-		Post.find({where: {receiver: {like: role}}},
+		Post.find({where: {or: [{receiver: {like: role}},{receiver: {like: All}}]}}	,
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
