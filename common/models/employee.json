@@ -63,7 +63,7 @@
     "device_model": {
       "type": "string"
     },
-    "tickets": {
+    "employeeTicket": {
       "type": "string"
     }
   },
