@@ -1,7 +1,7 @@
 // save old method to getPostByRole
 module.exports = function(Post) {
 	Post.getPostByRole = function(role,cb){
-		Post.find({where: {receiver: {like: role}}},
+		Post.find({where: {or: [{receiver: {like: role}},{receiver: {like: "All"}}]}},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
@@ -549,6 +549,95 @@ module.exports = function(Post) {
 		);
 	}
 
+	Post.search = function(input,cb){
+		var PostEmployee = Post.app.models.Employee;
+		Post.find({where: {content: {like: input}}}, 
+			function (err,instance){
+				if (instance===null){
+					cb(null,null);
+				} else {
+					var postResult = [];
+					postResult = instance;
+					// console.log(instance);
+					// cb(null, instance);
+
+					PostEmployee.find({where: {name: {like: input}}}, 
+						function (err,instance){
+							if (instance===null){
+								cb(null,null);
+							} else {
+								// cb(null,instance);
+								// var employeeResult = []
+								var employeeResult = instance;
+								// var result = employeeResult+postResult;
+								// cb(null,employeeResult);
+								cb(null, employeeResult, postResult);
+							}
+						}
+					);
+					// cb(null,postResult);
+				}
+			}
+		);
+	}
+		// var PostEmployee = Post.app.models.Employee;
+		// PostComment.find({order: 'postId DESC'},
+		// 	function(err,instance){
+		// 		// console.log(instance.length);
+		// 		if(instance.length==0){
+		// 			cb(null,[]);
+		// 		} else {
+		// 			var postIds = []; 
+		// 			for(postId in instance){
+		// 				postIds.push(instance[postId]['postId']); // collecting all postId of post					
+		// 			}
+
+		// 			var count = []; 
+		// 			var index = -1;
+		// 			var temp = [];
+		// 			for (var a in postIds){ 
+		// 				if (postIds[a-1] != "undefined"){ // from second element until the last element of postIds
+		// 					if (postIds[a] === postIds[a-1]){ 
+		// 						count[index]++;
+		// 					} else { // find new postId
+		// 						index++;
+		// 						temp.push(postIds[a]);
+		// 						count[index] = 1;
+		// 					}
+		// 				} else { // the first element
+		// 					index++;
+		// 					temp.push(postIds[a]);
+		// 					count[index] = 1;
+		// 				}
+		// 			}
+
+		// 			// search the most commented post
+		// 			var max = 0;
+		// 			for (var i in count){
+		// 				if(count[i] > max){
+		// 					max = count[i];
+		// 					result = i;
+		// 				}
+		// 			}
+		// 			// console.log(instance);
+
+		// 			// get all data of post by postId
+		// 			Post.findOne({where : {id : postIds[result]}},
+		// 				function(err,instance){
+		// 					if(instance===null){
+		// 						cb(null,null);
+		// 					} else {
+		// 						cb(null, instance); // return the most commented post
+		// 					}
+		// 			});
+					
+					
+		// 		}
+		// 	}
+		// );
+	// 	}
+	// }
+
 	Post.remoteMethod(
 		'getPostByRole',
 		{
@@ -698,6 +787,18 @@ module.exports = function(Post) {
 		{
 			returns: {type: 'string', root: true},
 			http: {path: '/getMostCommentedPost', verb: 'post', source: 'query'}
+		}
+	);
+
+	Post.remoteMethod(
+		'search',
+		{
+			accepts: {arg: 'input', type: 'string'},
+			returns: [
+					{arg: 'post', type: 'string', root:true},
+					{arg: 'people', type: 'string', root:true}
+					],
+			http: {path: '/search', verb: 'get', source: 'query'}
 		}
 	);
 

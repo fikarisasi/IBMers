@@ -37,10 +37,6 @@
     "seen": {
       "type": "string"
     },
-    "title": {
-      "type": "string",
-      "required": true
-    },
     "writer": {
       "type": "string"
     },

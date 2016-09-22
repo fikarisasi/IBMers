@@ -53,6 +53,15 @@
     },
     "oneSignalId": {
       "type": "string"
+    },
+    "session_count": {
+      "type": "string"
+    },
+    "last_active": {
+      "type": "string"
+    },
+    "device_model": {
+      "type": "string"
     }
   },
   "validations": [],
@@ -159,6 +168,13 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "saveOneSignalId"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "getDevices"
     }
   ],
   "methods": {}

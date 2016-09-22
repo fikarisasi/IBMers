@@ -683,6 +683,93 @@ module.exports = function(Employee) {
 
 	};
 
+	// Employee.getDevices = function (employeeId,cb){
+	// 	var http = require('https');
+	// 	var headers = {
+	// 	  "Content-Type": "application/json",
+	// 	  "Authorization": "Basic YzIxZTYwOWEtNmU3Zi00ZTZiLTlhZWEtYjFjYTRhMjA3NzMy"
+	// 	};
+	// 	function getDevices(callback) {
+	// 	    return http.get({
+	// 	        host: "onesignal.com",
+	// 	       	port: 443,
+	// 	       	path: "/api/v1/players?app_id=0010ee59-1672-4d84-acaf-2256df52939c",
+ //   				headers: headers
+	// 	    }, function(response) {
+	// 	        // Continuously update stream with data
+	// 	        var body = '';
+	// 	        response.on('data', function(d) {
+	// 	            body += d;
+	// 	        });
+	// 	        response.on('end', function() {
+
+	// 	            // Data reception is done, do whatever with it!
+	// 	            // paserd1 = JSON.stringify(body);
+	// 	            var parsed = JSON.parse(body);
+
+	// 	            // console.log(parsed.players[0].id);
+
+	// 	            // cb(null, parsed);
+	// 	            // return parsed;
+	// 	            // var oneSignalId = parsed.id;
+	// 	            // var session_count = parsed.session_count;
+	// 	            // var last_active = parsed.last_active;
+
+	// 	            // var allMessages = []; // array of string, this variabel combines senderMessage & receiverMessage
+
+	// 	            oneSignalId = [];
+	// 	            Employee.findOne({where:{id: employeeId}}, 
+	// 	            			function(err,instance){
+	// 	            				if(instance===null){
+	// 	            					// cb(null,null);
+	// 	            				} else {
+	// 	            					// cb(null, instance);
+	// 	            					oneSignalId = instance['oneSignalId'];
+	// 	            				}
+	// 	            			})
+
+	// 	            var session_count;
+	// 	            var last_active;
+	// 	            for(var x in parsed.players){
+	// 	            	if(parsed.players[x].id === oneSignalId){
+	// 	            		session_count = parsed.players[x].session_count;
+	// 	            		session_count = parsed.players[x].last_active;
+
+	// 	            	}
+	// 	              // allMessages.push(parsed[x].id); // push senderMessage to allMessages
+	// 	              // console.log(parsed[x].id);
+	// 	            }
+	// 	            // device_model : parsed.device_model;
+	// 	            // console.log(allMessages);
+
+	// 	            Employee.updateAll({id:employeeId}, {session_count : session_count, last_active : last_active},
+	// 	            	function(err,info){
+	// 	            		Employee.findOne({where:{id: employeeId}}, 
+	// 	            			function(err,instance){
+	// 	            				if(instance===null){
+	// 	            					cb(null,null);
+	// 	            				} else {
+	// 	            					cb(null, instance);
+	// 	            				}
+	// 	            			})
+	// 	            });
+
+	// 	            // callback({
+	// 	            //     oneSignalId : parsed.id,
+	// 	            //     session_count : parsed.session_count,
+	// 	            //     last_active : parsed.last_active
+	// 	            // });
+	// 	        });
+	// 	    });
+
+	// 	}
+
+	// 	var result = getDevices(cb);
+	// 	// console.log(result);
+	// 	// console.log(cb);
+					
+	// }
+
 	Employee.remoteMethod(
 		'getEmployee',
 		{
@@ -834,4 +921,13 @@ module.exports = function(Employee) {
 		    returns: {arg: 'passwordChange', type: 'boolean'}
 		  }
 	);
+
+	// Employee.remoteMethod(
+	// 	'getDevices',
+	// 	{
+	// 		arg: 'employeeId', type: 'string',
+	// 		returns : {arg: 'result', type: 'object', root: true},
+	// 		http : {path: '/getDevices', verb: 'get'}
+	// 	}
+	// );
 };
