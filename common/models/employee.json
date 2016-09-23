@@ -63,9 +63,9 @@
     "device_model": {
       "type": "string"
     },
-     "employeeTicket": {
-       "type": "string"
-     }
+    "employeeTicket": {
+      "type": "string"
+    }
   },
   "validations": [],
   "relations": {
