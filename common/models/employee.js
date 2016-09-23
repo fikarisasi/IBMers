@@ -683,6 +683,20 @@ module.exports = function(Employee) {
 
 	};
 
+
+	Employee.searchPeople = function(input,cb){
+		Employee.find({limit:3, where: {name: {like: input}}}, 
+			function (err,instance){
+				if (instance===null){
+					cb(null,null);
+				} else {
+					cb(null,instance);
+				}
+			}
+	)}
+
+
+
 	// Employee.getDevices = function (employeeId,cb){
 	// 	var http = require('https');
 	// 	var headers = {
@@ -930,4 +944,13 @@ module.exports = function(Employee) {
 	// 		http : {path: '/getDevices', verb: 'get'}
 	// 	}
 	// );
+
+	Employee.remoteMethod(
+		'searchPeople',
+		{
+			accepts: {arg: 'input', type: 'string'},
+			returns: {arg: 'people', type: 'string', root:true},					
+			http: {path: '/searchPeople', verb: 'get', source: 'query'}
+		}
+	);
 };

@@ -549,37 +549,44 @@ module.exports = function(Post) {
 		);
 	}
 
-	Post.search = function(input,cb){
+	Post.searchPost = function(input,cb){
 		var PostEmployee = Post.app.models.Employee;
-		Post.find({where: {content: {like: input}}}, 
+		Post.find({limit:3, where: {content: {like: input}}}, 
 			function (err,instance){
 				if (instance===null){
 					cb(null,null);
 				} else {
-					var postResult = [];
-					postResult = instance;
-					// console.log(instance);
-					// cb(null, instance);
-
-					PostEmployee.find({where: {name: {like: input}}}, 
-						function (err,instance){
-							if (instance===null){
-								cb(null,null);
-							} else {
-								// cb(null,instance);
-								// var employeeResult = []
-								var employeeResult = instance;
-								// var result = employeeResult+postResult;
-								// cb(null,employeeResult);
-								cb(null, employeeResult, postResult);
-							}
-						}
-					);
-					// cb(null,postResult);
+					cb(null,instance);
 				}
 			}
 		);
 	}
+
+	// Post.search = function(input,cb){
+	// 	var PostEmployee = Post.app.models.Employee;
+	// 	Post.find({limit:3, where: {content: {like: input}}}, 
+	// 		function (err,instance){
+	// 			if (instance===null){
+	// 				cb(null,null);
+	// 			} else {
+	// 				var postResult = [];
+	// 				postResult = instance;
+	// 				PostEmployee.find({limit:3, where: {name: {like: input}}}, 
+	// 					function (err,instance){
+	// 						if (instance===null){
+	// 							cb(null,null);
+	// 						} else {
+	// 							var employeeResult = instance;
+	// 							cb(null,employeeResult, postResult);
+	// 						}
+	// 					}
+	// 				);
+	// 			}
+	// 		}
+	// 	);
+	// }
+
+
 		// var PostEmployee = Post.app.models.Employee;
 		// PostComment.find({order: 'postId DESC'},
 		// 	function(err,instance){
@@ -791,15 +798,16 @@ module.exports = function(Post) {
 	);
 
 	Post.remoteMethod(
-		'search',
+		'searchPost',
 		{
 			accepts: {arg: 'input', type: 'string'},
-			returns: [
+			returns: 
 					{arg: 'post', type: 'string', root:true},
-					{arg: 'people', type: 'string', root:true}
-					],
-			http: {path: '/search', verb: 'get', source: 'query'}
+					// {arg: 'people', type: 'string', root:true}
+					
+			http: {path: '/searchPost', verb: 'get', source: 'query'}
 		}
 	);
+
 
 };
