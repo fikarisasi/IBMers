@@ -549,42 +549,31 @@ module.exports = function(Post) {
 		);
 	}
 
-	Post.searchPost = function(input,cb){
+
+	Post.search = function(input,cb){
 		var PostEmployee = Post.app.models.Employee;
-		Post.find({limit:3, where: {content: {like: input}}}, 
+		Post.find({where: {content: {like: input}}}, 
 			function (err,instance){
 				if (instance===null){
 					cb(null,null);
 				} else {
-					cb(null,instance);
+					var postResult = [];
+					postResult = instance;
+					var employeeResult = [];
+					PostEmployee.find({where: {name: {like: input}}},
+						function (err,instance){
+							if (instance===null){
+								cb(null,null);
+							} else {
+								employeeResult = instance;
+								cb(null,postResult,employeeResult);
+							}
+						}
+					);
 				}
 			}
 		);
 	}
-
-	// Post.search = function(input,cb){
-	// 	var PostEmployee = Post.app.models.Employee;
-	// 	Post.find({limit:3, where: {content: {like: input}}}, 
-	// 		function (err,instance){
-	// 			if (instance===null){
-	// 				cb(null,null);
-	// 			} else {
-	// 				var postResult = [];
-	// 				postResult = instance;
-	// 				PostEmployee.find({limit:3, where: {name: {like: input}}}, 
-	// 					function (err,instance){
-	// 						if (instance===null){
-	// 							cb(null,null);
-	// 						} else {
-	// 							var employeeResult = instance;
-	// 							cb(null,employeeResult, postResult);
-	// 						}
-	// 					}
-	// 				);
-	// 			}
-	// 		}
-	// 	);
-	// }
 
 
 		// var PostEmployee = Post.app.models.Employee;
@@ -798,16 +787,14 @@ module.exports = function(Post) {
 	);
 
 	Post.remoteMethod(
-		'searchPost',
+		'search',
 		{
+			http: {path: '/search', verb: 'get', source: 'query'},
 			accepts: {arg: 'input', type: 'string'},
-			returns: 
-					{arg: 'post', type: 'string', root:true},
-					// {arg: 'people', type: 'string', root:true}
+			returns: [
+					{arg: 'post', type: 'string'},
+					{arg: 'people', type: 'string'} ]
 					
-			http: {path: '/searchPost', verb: 'get', source: 'query'}
 		}
 	);
-
-
 };
