@@ -37,14 +37,14 @@ module.exports = function(Event) {
 																	if(ticketsNow[0]===""){
 																		ticketsNow[0]=ticketId;
 																		var ticketsNowString = ticketsNow[0].toString();
-																		TicketEmployee.updateAll({id: employeeId}, {tickets: ticketsNowString},
+																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
 																				cb(null,ticketMessage);
 																			});
 																	}else{
 																		ticketsNow.push(ticketId);
 																		var ticketsNowString = ticketsNow.toString();
-																		TicketEmployee.updateAll({id: employeeId}, {tickets: ticketsNowString},
+																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
 																				cb(null,ticketMessage);
 																			});
@@ -81,14 +81,14 @@ module.exports = function(Event) {
 																	if(ticketsNow[0]===""){
 																		ticketsNow[0]=ticketId;
 																		var ticketsNowString = ticketsNow[0].toString();
-																		TicketEmployee.updateAll({id: employeeId}, {tickets: ticketsNowString},
+																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
 																				cb(null,ticketMessage);
 																			});
 																	}else{
 																		ticketsNow.push(ticketId);
 																		var ticketsNowString = ticketsNow.toString();
-																		TicketEmployee.updateAll({id: employeeId}, {tickets: ticketsNowString},
+																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
 																				cb(null,ticketMessage);
 																			});
