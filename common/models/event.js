@@ -112,7 +112,7 @@ Event.remoteMethod(
 		{arg: 'eventId', type: 'string'}
 		],
 		returns: {type: 'string', root: true},
-		http: {path: '/attend', verb: 'put'}
+		http: {path: '/attend', verb: 'put', source: 'query'}
 	}
 	);
 };
