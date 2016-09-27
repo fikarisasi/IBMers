@@ -33,16 +33,16 @@ module.exports = function(Event) {
 																if(info===null){
 																	cb(null,null);
 																}else{
-																	var ticketsNow = info['employeeTicket'].split(","); //get al tickets
+																	var ticketsNow = info['employeeTicket'].split(","); //get all event not ticket, i'm too lazy to change the variable name
 																	if(ticketsNow[0]===""){
-																		ticketsNow[0]=ticketId;
+																		ticketsNow[0]=eventId;
 																		var ticketsNowString = ticketsNow[0].toString();
 																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
 																				cb(null,ticketMessage);
 																			});
 																	}else{
-																		ticketsNow.push(ticketId);
+																		ticketsNow.push(eventId);
 																		var ticketsNowString = ticketsNow.toString();
 																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
@@ -79,14 +79,14 @@ module.exports = function(Event) {
 																}else{
 																	var ticketsNow = info['employeeTicket'].split(","); //get al tickets
 																	if(ticketsNow[0]===""){
-																		ticketsNow[0]=ticketId;
+																		ticketsNow[0]=eventId;
 																		var ticketsNowString = ticketsNow[0].toString();
 																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
 																				cb(null,ticketMessage);
 																			});
 																	}else{
-																		ticketsNow.push(ticketId);
+																		ticketsNow.push(eventId);
 																		var ticketsNowString = ticketsNow.toString();
 																		TicketEmployee.updateAll({id: employeeId}, {employeeTicket: ticketsNowString},
 																			function(err, instance){
