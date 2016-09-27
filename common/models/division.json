@@ -9,6 +9,9 @@
   "properties": {
     "name": {
       "type": "string"
+    },
+    "value": {
+      "type": "string"
     }
   },
   "validations": [],
