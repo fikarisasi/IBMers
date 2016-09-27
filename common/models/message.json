@@ -27,6 +27,10 @@
     "content": {
       "type": "string",
       "required": true
+    },
+    "read": {
+      "type": "string",
+      "required": false
     }
   },
   "validations": [],
