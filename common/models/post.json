@@ -22,6 +22,9 @@
     "date": {
       "type": "date"
     },
+    "writer_name": {
+      "type": "string"
+    },
     "photo": {
       "type": "string"
     },

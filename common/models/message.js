@@ -1,5 +1,5 @@
 module.exports = function(Message) {
-	Message.getMessage = function(sender, receiver, cb){
+	Message.getMessage = function(sender, sender_name, receiver, receiver_name, cb){
 		Message.find({fields: {id:false}, where:{sender: sender, receiver: receiver}}, // get all data except id from database
 			function(err,instance){
 				if(instance===null){
@@ -46,6 +46,7 @@ module.exports = function(Message) {
 				}else {
 					var messageMessage = instance;
 					var receiver = instance['receiver'];
+					// var receiver_name = instance['receiver_name'];
 					var messageId = instance['id'];
 					var messageContent = instance['content'];
 					Employee.findOne({fields: {id: false}, where: {username: receiver}},
@@ -134,7 +135,9 @@ module.exports = function(Message) {
 		{
 			accepts : [
 						{arg : 'sender', type: 'string'},
-						{arg : 'receiver', type: 'string'}
+						{arg : 'receiver', type: 'string'},
+						{arg : 'sender_name', type: 'string'},
+						{arg : 'receiver_name', type: 'string'}
 					],
 			returns: {arg: 'id', type: 'string', root: true},
 			http: {path: '/getMessage', verb: 'get', source: 'query'}

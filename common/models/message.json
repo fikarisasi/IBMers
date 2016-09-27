@@ -19,6 +19,14 @@
       "type": "string",
       "required": false
     },
+    "sender_name": {
+      "type": "string",
+      "required": false
+    },
+    "receiver_name": {
+      "type": "string",
+      "required": false
+    },
     "id": {
       "type": "string",
       "id": true,
