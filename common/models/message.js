@@ -105,8 +105,28 @@ module.exports = function(Message) {
 					
 				}
 			})
-		
 	}
+
+	Message.addReader = function(id, receiver, cb){
+		Message.findOne({where:{id:id}},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				}else{
+					Message.updateAll({receiver: receiver}, {read:receiver},
+					function(err,info){
+						Message.findOne({where:{id: id}},
+							function(err,instance){
+								if(instance===null){
+									cb(null,null);
+								}else{
+									cb(null,instance);
+								}
+							})
+					});
+				}
+			});
+	};
 
 
 	Message.remoteMethod(
@@ -131,6 +151,18 @@ module.exports = function(Message) {
 					],
 			http: {path: '/addMessage', verb: 'post', source: 'query'},
 			description: "Adding a message"
+		}
+	);
+
+	Message.remoteMethod(
+		'addReader',
+		{
+			accepts: [
+						{arg : 'id', type: 'string'},
+						{arg : 'receiver', type: 'string'}
+					],
+			returns: {arg: 'status', type: 'string', root: true},
+			http: {path: '/addReader', verb: 'get', source: 'query'}
 		}
 	);
 };
