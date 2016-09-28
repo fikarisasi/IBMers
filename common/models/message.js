@@ -135,9 +135,7 @@ module.exports = function(Message) {
 		{
 			accepts : [
 						{arg : 'sender', type: 'string'},
-						{arg : 'receiver', type: 'string'},
-						{arg : 'sender_name', type: 'string'},
-						{arg : 'receiver_name', type: 'string'}
+						{arg : 'receiver', type: 'string'}
 					],
 			returns: {arg: 'id', type: 'string', root: true},
 			http: {path: '/getMessage', verb: 'get', source: 'query'}
