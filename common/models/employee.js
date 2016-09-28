@@ -770,6 +770,7 @@ module.exports = function(Employee) {
 					
 	// }
 
+
 	Employee.remoteMethod(
 		'getEmployee',
 		{
