@@ -13,19 +13,19 @@
     },
     "sender": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "receiver": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "sender_name": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "receiver_name": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "id": {
       "type": "string",
