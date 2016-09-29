@@ -633,9 +633,6 @@ module.exports = function(Post) {
 		// );
 	// 	}
 	// }
-
-	
-
 	Post.remoteMethod(
 		'getPostByRole',
 		{

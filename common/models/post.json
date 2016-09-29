@@ -25,6 +25,9 @@
     "writer_name": {
       "type": "string"
     },
+    "writer_photo": {
+      "type": "string"
+    },
     "photo": {
       "type": "string"
     },
