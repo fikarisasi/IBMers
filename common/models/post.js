@@ -1,14 +1,39 @@
-// save old method to getPostByRole
+// save old method to getPost
 module.exports = function(Post) {
-	Post.getPostByRole = function(role,cb){
-		Post.find({where:{or:[{receiver:{like: role}},{receiver:{like: "All"}}]},order:"date DESC"}		,
-			function(err,instance){
-				if(instance===null){
-					cb(null,null);
-				}else{
-					cb(null,instance);
-				}
-			});
+	Post.getPost = function(division,role,admin,cb){
+		//admin get all post
+		if(admin){
+			Post.find({order:"date DESC"},
+				function(err,instance){
+					if(instance===null){
+						cb(null,null);
+					}else{
+						cb(null,instance);
+					}
+				});
+		}
+		//manager get post only for manager, post from their division, and all
+		else if(role==="Manager" | role==="manager"){
+			Post.find({where:{or:[{receiver:{like:"Manager"}},{or:[{receiver:{like: division}},{receiver:{like:"All"}}]}]},order:"date DESC"},
+				function(err,instance){
+					if(instance===null){
+						cb(null,null);
+					}else{
+						cb(null,instance);
+					}
+				});
+		}
+		//regular employee get post for their division and all
+		else{
+			Post.find({where:{or:[{receiver:{like: division}},{receiver:{like: "All"}}]},order:"date DESC"}		,
+				function(err,instance){
+					if(instance===null){
+						cb(null,null);
+					}else{
+						cb(null,instance);
+					}
+				});
+		}		
 	};
 
 // 	Post.remoteMethod(
@@ -634,11 +659,15 @@ module.exports = function(Post) {
 	// 	}
 	// }
 	Post.remoteMethod(
-		'getPostByRole',
+		'getPost',
 		{
-			accepts: {arg: 'role', type: 'string'},
-			returns: {arg: 'id', type: 'string', root: true},
-			http: {path: '/getPostByRole', verb: 'get', source: 'query'},
+			accepts: [
+						{arg: 'division', type: 'string'},
+					 	{arg: 'role', type: 'string'},
+					 	{arg: 'admin', type: 'boolean'}
+					 ],
+			returns: {type: 'string', root: true},
+			http: {path: '/getPost', verb: 'get', source: 'query'},
 			description: "Get all posts by user role"
 		}
 	);

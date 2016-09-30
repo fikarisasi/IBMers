@@ -19,6 +19,12 @@
     "role": {
       "type": "string"
     },
+    "division": {
+      "type": "string"
+    },
+    "admin": {
+      "type": "boolean"
+    },
     "bio": {
       "type": "string"
     },
