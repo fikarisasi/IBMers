@@ -26,6 +26,73 @@ module.exports = function(Ticket) {
 		
 	}
 
+	Ticket.changeScanStatus = function(id, cb){
+		var TicketEvent = Ticket.app.models.Event;
+		Ticket.findOne({where: {id : id}},
+			function(err, instance){
+				if(instance===null){
+					cb(null,null);
+				} else {
+					var scan_status = instance['scan_status'];
+					var ticketId = instance['id'];
+					var employeeId = instance['employeeId'].toString();
+					var eventId = instance['eventId'];
+					if(scan_status!="true"){
+						Ticket.updateAll({id:ticketId}, {scan_status: true},
+							function(err,instance){
+								if(instance===null){
+									cb(null,null);
+								} else {
+									TicketEvent.find({where : {id:eventId}},
+										function(err,instance){
+											if(instance===null){
+												cb(null,null);
+											} else {
+												var attendee = [];
+												var attendee = instance[0]['attendee'];
+												if (attendee===""){
+													// var attendee = ;
+													// var attendeestring = attendee.toString();
+													TicketEvent.updateAll({id:eventId}, {attendee:employeeId},
+														function(err, instance){
+															message = instance;
+															if(instance===null){
+																cb(null,null);
+															} else {
+																console.log(null,message);
+															}
+														}
+													)
+												} else {
+													// console.log(instance);
+														// var attendee = ;
+														attendee1 = (instance[0]['attendee']);
+														attendee1.push(employeeId);
+														TicketEvent.updateAll({id:eventId}, {attendee:attendee1},
+															function(err, instance){
+																message = instance;
+																if(instance===null){
+																	cb(null,null);
+																} else {
+																	cb(null,message);
+																}
+															}
+														)
+												}
+											}
+										}
+									)
+								}
+							}
+						)
+					} else {
+						cb (null, "the ticket has registered as attendee");
+					}
+				}
+			}
+		)
+	}
+
 	// Ticket.getTickets = function(eventId, cb){
 	// 	var TicketEvent = Ticket.app.models.Event;
 	// 	Ticket.find({where: {eventId: eventId}},
@@ -71,6 +138,16 @@ module.exports = function(Ticket) {
 	// 		}
 	// 	);
 	// }
+
+	Ticket.remoteMethod(
+		'changeScanStatus',
+		{
+			accepts: {arg: 'id ticket', type: 'string'},
+			returns: {type: 'string', root: 'true'},
+			http: {path: '/changeScanStatus', verb: 'put', source:'query'},
+			description: "For changing status of scan_status of attendee"
+		}
+	);
 
 	Ticket.remoteMethod(
 		'createTicket',

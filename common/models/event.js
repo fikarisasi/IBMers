@@ -7,18 +7,18 @@ module.exports = function(Event) {
 				if(instance===null){
 					cb(null,null);
 				}else{
-					var theAttendeeNow = instance['attendee'].split(","); //get all people who will attend this event
+					var theticket_ordererNow = instance['ticket_orderer'].split(","); //get all people who will attend this event
 					var eventTitle = instance['title'];
 					var eventLocation = instance['location'];
 					var eventDateStart = instance['date_started'];
 					var eventDateEnd = instance['date_ended'];
 					var data = '{"name": "'+ eventTitle +'","employeeId": "'+ employeeId +'","eventId": "'+ eventId +'","location": "'+ eventLocation +'","date_started": "'+ eventDateStart +'","date_ended": "'+ eventDateEnd +'"}';
 					data = JSON.parse(data);
-					//if this is the first attendee
-					if(theAttendeeNow[0]===""){
-						theAttendeeNow[0] = employeeId;
-						var theAttendeeNowString = theAttendeeNow[0].toString();
-						Event.updateAll({id: eventId}, {attendee: theAttendeeNowString},
+					//if this is the first ticket_orderer
+					if(theticket_ordererNow[0]===""){
+						theticket_ordererNow[0] = employeeId;
+						var theticket_ordererNowString = theticket_ordererNow[0].toString();
+						Event.updateAll({id: eventId}, {ticket_orderer: theticket_ordererNowString},
 							function(err,instance){
 								TicketEvent.create(data,
 									function(err, instance){
@@ -60,9 +60,9 @@ module.exports = function(Event) {
 					}
 					//it's only the last person who will attend
 					else{
-						theAttendeeNow.push(employeeId);
-						var theAttendeeNowString = theAttendeeNow.toString();
-						Event.updateAll({id: eventId}, {attendee: theAttendeeNowString},
+						theticket_ordererNow.push(employeeId);
+						var theticket_ordererNowString = theticket_ordererNow.toString();
+						Event.updateAll({id: eventId}, {ticket_orderer: theticket_ordererNowString},
 							function(err,instance){
 								TicketEvent.create(data,
 									function(err, instance){
@@ -104,6 +104,28 @@ module.exports = function(Event) {
 });
 }
 
+Event.getAttendees = function(eventId, cb){
+	Event.find({where : {id:eventId}},
+		function(err, instance){
+			if(instance===null){
+				cb(null,null);
+			} else {
+				console.log(instance);
+				var TicketEvent = Event.app.models.Ticket;
+				TicketEvent.find({where:{eventId:eventId}},
+					function(err,instance){
+						if(instance===null){
+							cb(null,null);
+						} else {
+							cb(null,instance);
+						}
+					}
+				)
+			}
+		}
+	)
+}
+
 Event.remoteMethod(
 	'attend',
 	{
@@ -113,6 +135,15 @@ Event.remoteMethod(
 		],
 		returns: {type: 'string', root: true},
 		http: {path: '/attend', verb: 'put', source: 'query'}
+	}
+	);
+
+Event.remoteMethod(
+	'getAttendees',
+	{
+		accepts: {arg: 'eventId', type: 'string'},
+		returns: {type: 'string', root: true},
+		http: {path: '/getAttendees', verb: 'get', source: 'query'}
 	}
 	);
 };

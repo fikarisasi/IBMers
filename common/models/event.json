@@ -25,6 +25,9 @@
     "contact_person": {
       "type": "string"
     },
+    "ticket_orderer": {
+      "type": "string"
+    },
     "attendee": {
       "type": "string"
     },
