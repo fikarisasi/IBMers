@@ -129,6 +129,79 @@ module.exports = function(Message) {
 			});
 	};
 
+	Message.recentChats = function(id, cb){
+		Message.find({where: {or :[{receiver: id}, {sender:id}]}, order: "date DESC"},
+			function(err,instance){
+				if(instance===null){
+					cb(null,null);
+				} else {
+					var length = 0;
+					temp = JSON.stringify(instance); // converts a JavaScript value to a JSON string
+					var parsed = JSON.parse(temp); // parsing string
+					var person= [];
+					
+					var allMessages = []; // array of string, this variabel combines senderMessage & receiverMessage
+
+
+					for (var x=0; x<parsed.length; x++){
+						if(x===0){
+							// console.log(id);
+							// console.log(parsed[x]['sender']);
+							if(parsed[x]['sender']!=id){
+								allMessages.push(parsed[x]);
+								person.push(parsed[x]['sender']);
+							} else {
+								allMessages.push(parsed[x]);
+								person.push(parsed[x]['receiver']);
+							}
+						} else {
+							if(parsed[x]['sender']!=id){
+								var find = 0;
+
+								for(var y in person){
+									if(parsed[x]['sender']===person[y]){
+										find = 1;
+									}
+								}
+								
+								console.log(find);
+								if(find!=1){
+									allMessages.push(parsed[x]);
+									person.push(parsed[x]['sender']);
+								}
+							} else {
+								var find = 0;
+								
+								for(var y in person){
+									if(parsed[x]['receiver']===person[y]){
+										find = 1;
+									}
+								}
+								
+								console.log(find);
+
+								if(find!=1){
+									allMessages.push(parsed[x]);
+									person.push(parsed[x]['receiver']);
+								}
+							}
+						}
+					}
+
+					cb(null,allMessages);
+				}
+			}
+		);
+	}
+
+	Message.remoteMethod(
+		'recentChats',
+		{
+			accepts: {arg: 'id', type:'string'},
+			returns: {arg: 'data', type: 'string', root: 'true'},
+			http: {path: '/recentChats', verb: 'get', source: 'query'}
+		}
+	);
 
 	Message.remoteMethod(
 		'getMessage',
