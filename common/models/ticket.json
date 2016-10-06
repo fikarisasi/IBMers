@@ -12,6 +12,9 @@
     },
     "qrcode_link": {
       "type": "string"
+    },
+    "scan": {
+      "type": "boolean"
     }
   },
   "validations": [],

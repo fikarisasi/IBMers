@@ -12,7 +12,7 @@ module.exports = function(Event) {
 					var eventLocation = instance['location'];
 					var eventDateStart = instance['date_started'];
 					var eventDateEnd = instance['date_ended'];
-					var data = '{"name": "'+ eventTitle +'","employeeId": "'+ employeeId +'","eventId": "'+ eventId +'","location": "'+ eventLocation +'","date_started": "'+ eventDateStart +'","date_ended": "'+ eventDateEnd +'"}';
+					var data = '{"name": "'+ eventTitle +'","employeeId": "'+ employeeId +'","eventId": "'+ eventId +'","location": "'+ eventLocation +'","date_started": "'+ eventDateStart +'","date_ended": "'+ eventDateEnd +'","scan":false}';
 					data = JSON.parse(data);
 					//if this is the first attendee
 					if(theAttendeeNow[0]===""){
@@ -99,10 +99,13 @@ module.exports = function(Event) {
 											});
 									});
 							});
-}
-}
-});
-}
+					}
+			}
+		});
+	}
+	Event.readTicket = function(ticketId, cb){
+		
+	}
 
 Event.remoteMethod(
 	'attend',
