@@ -39,6 +39,10 @@
     "read": {
       "type": "string",
       "required": false
+    },
+    "photo": {
+      "type": "string",
+      "required": false
     }
   },
   "validations": [],
