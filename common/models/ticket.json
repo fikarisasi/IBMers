@@ -13,8 +13,8 @@
     "qrcode_link": {
       "type": "string"
     },
-    "scan_status": {
-      "type": "string"
+    "scan": {
+      "type": "boolean"
     }
   },
   "validations": [],

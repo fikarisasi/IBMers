@@ -26,10 +26,14 @@
       "type": "string"
     },
     "ticket_orderer": {
-      "type": "string"
+      "type": [
+        "object"
+      ]
     },
     "attendee": {
-      "type": "string"
+      "type": [
+        "object"
+      ]
     },
     "ticket_limit": {
       "type": "number"
