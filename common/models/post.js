@@ -83,40 +83,42 @@ module.exports = function(Post) {
 // 		}
 		
 // 	};
-
-	Post.pagination = function(page, role, cb){
+	
+	Post.pagination = function(page, division, role, admin, cb){
 		pagesize = page*10-10;
-		if(role==="div_all"){
-			Post.find({limit: 10, skip: pagesize, order : 'date DESC', where: {or: [{or: [{div_all: true}, {div_jti: true}]}, {div_gbs: true}]}},
-			function(err,instance){
-				if(instance===null){
-					cb(null,null);
-				}else{
-					cb(null,instance);
-				}
-			});
-		}else if(role==="div_jti"){
-			Post.find({limit: 10, skip: pagesize, order : 'date DESC', where: {div_jti: true}},
-			function(err,instance){
-				if(instance===null){
-					cb(null,null);
-				}else{
-					cb(null,instance);
-				}
-			});
-		}else if(role==="div_gbs"){
-			Post.find({limit: 10, skip: pagesize, order : 'date DESC', where: {div_gbs: true}},
-			function(err,instance){
-				if(instance===null){
-					cb(null,null);
-				}else{
-					cb(null,instance);
-				}
-			});
-		}else {
-			cb(null,null);
+		//admin get all post
+		if(admin){
+			Post.find({order:"date DESC", limit: 10, skip: pagesize},
+				function(err,instance){
+					if(instance===null){
+						cb(null,null);
+					}else{
+						cb(null,instance);
+					}
+				});
 		}
-		
+		//manager get post only for manager, post from their division, and all
+		else if(role==="Manager" | role==="manager"){
+			Post.find({where:{or:[{receiver:{like:"Manager"}},{or:[{receiver:{like: division}},{receiver:{like:"All"}}]}]},order:"date DESC", limit: 10, skip: pagesize},
+				function(err,instance){
+					if(instance===null){
+						cb(null,null);
+					}else{
+						cb(null,instance);
+					}
+				});
+		}
+		//regular employee get post for their division and all
+		else{
+			Post.find({where:{or:[{receiver:{like: division}},{receiver:{like: "All"}}]},order:"date DESC", limit: 10, skip: pagesize}		,
+				function(err,instance){
+					if(instance===null){
+						cb(null,null);
+					}else{
+						cb(null,instance);
+					}
+				});
+		}			
 	};
 
 	Post.addLiker = function(employeeUsername, postId, cb){
@@ -677,9 +679,11 @@ module.exports = function(Post) {
 		{
 			accepts: [
 				{arg: 'page', type: 'number'},
-				{arg: 'role', type: 'string'}
+				{arg: 'division', type: 'string'},
+				{arg: 'role', type: 'string'},
+				{arg: 'admin', type: 'boolean'}
 			],
-			returns: {arg: 'id', type: 'string', root: true},
+			returns: {type: 'string', root: true},
 			http: {path: '/pagination', verb: 'get', source: 'query'},
 			description: "Get all posts by pagination"
 		}
