@@ -184,6 +184,13 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "getDevices"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findOne"
     }
   ],
   "methods": {}
