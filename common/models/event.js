@@ -1,5 +1,5 @@
 module.exports = function(Event) {
-	Event.attend= function(employeeId, eventId, cb){
+	Event.attend= function(employeeId, employeeName, employeePhoto, eventId, cb){
 		var TicketEvent = Event.app.models.Ticket;
 		var TicketEmployee = Event.app.models.Employee;
 		Event.findById(eventId,
@@ -12,7 +12,7 @@ module.exports = function(Event) {
 					var eventLocation = instance['location'];
 					var eventDateStart = instance['date_started'];
 					var eventDateEnd = instance['date_ended'];
-					var data = '{"name": "'+ eventTitle +'","employeeId": "'+ employeeId +'","eventId": "'+ eventId +'","location": "'+ eventLocation +'","date_started": "'+ eventDateStart +'","date_ended": "'+ eventDateEnd +'","scan":false}';
+					var data = '{"name": "'+ eventTitle +'","employeeId": "'+ employeeId +'","employeeName": "'+ employeeName +'","employeePhoto": "'+ employeePhoto +'","eventId": "'+ eventId +'","location": "'+ eventLocation +'","date_started": "'+ eventDateStart +'","date_ended": "'+ eventDateEnd +'","scan":false}';
 					data = JSON.parse(data);
 					//if this is the first ticket_orderer
 					if(theticket_ordererNow[0]===""){
@@ -185,6 +185,8 @@ Event.remoteMethod(
 	{
 		accepts: [
 		{arg: 'employeeId', type: 'string'},
+		{arg: 'employeeName', type: 'string'},
+		{arg: 'employeePhoto', type: 'string'},
 		{arg: 'eventId', type: 'string'}
 		],
 		returns: {type: 'string', root: true},
