@@ -104,27 +104,78 @@ module.exports = function(Event) {
 		});
 	}
 	Event.readTicket = function(ticketId, cb){
+		var TicketEvent = Event.app.models.Ticket;
+		TicketEvent.updateAll({id: ticketId}, {scan: true}, //update the scan status to true
+			function(err, instance){
+				TicketEvent.findOne({where: {id: ticketId}}, //get the ticket
+					function(err, instance){
+						var newAttendee = instance['employeeId'];
+						var eventId = instance['eventId']
+						Event.findOne({where: {id: eventId}}, //get what event from the ticket to get all the attendee
+							function(err, instance){
+								var theAttendeeNow = instance['attendee'].split(",");
+								//if this is the first attendee
+								if(theAttendeeNow[0]===""){
+									theAttendeeNow[0] = newAttendee;
+									var theAttendeeNowString = theAttendeeNow[0].toString();
+									Event.updateAll({id: eventId}, {attendee: theAttendeeNowString}, //update the attendees
+										function(err, instance){
+											if(instance===null){
+												cb(null, null);
+											}else{
+												cb(null, instance);
+											}
+										});
+								}
+								//this is the last attendee who attend
+								else{
+									theAttendeeNow.push(newAttendee);
+									var theAttendeeNowString = theAttendeeNow.toString();
+									Event.updateAll({id: eventId}, {attendee: theAttendeeNowString}, //update the attendees
+										function(err, instance){
+											if(instance===null){
+												cb(null, null);
+											}else{
+												cb(null, instance);
+											}
+										})
+								}
+							})
+					})
+			})
 		
 	}
 
 Event.getAttendees = function(eventId, cb){
-	Event.find({where : {id:eventId}},
+	var Employee = Event.app.models.Employee;
+	Event.findOne({where : {id:eventId}},
 		function(err, instance){
-			if(instance===null){
-				cb(null,null);
-			} else {
-				console.log(instance);
-				var TicketEvent = Event.app.models.Ticket;
-				TicketEvent.find({where:{eventId:eventId}},
-					function(err,instance){
-						if(instance===null){
-							cb(null,null);
-						} else {
-							cb(null,instance);
-						}
-					}
-				)
+			var ticket_orderer = instance['ticket_orderer'].split(","); //get ticket_orderer as array
+			var attendee = instance['attendee']; //get attendee as string
+			var attendStatus = [];
+			var attendeeMessage = [];
+			for(i in ticket_orderer){
+				// if(attendee.includes(ticket_orderer[i])){
+				// 	attendStatus.push(true);
+				// }else{
+				// 	attendStatus.push(false);
+				// }
+				console.log(i==ticket_orderer.length-1);
+				if(i==ticket_orderer.length-1){
+					Employee.findOne({fields: {name: true, photo: true}, where: {id: ticket_orderer[i]}},
+						function(err, instance){
+							attendeeMessage.push(instance);
+							cb(null,attendeeMessage);
+						})
+				}
+				else{
+					Employee.findOne({fields: {name: true, photo: true}, where: {id: ticket_orderer[i]}},
+						function(err, instance){
+							attendeeMessage.push(instance);
+						})
+				}
 			}
+							console.log(attendeeMessage);
 		}
 	)
 }
@@ -138,6 +189,15 @@ Event.remoteMethod(
 		],
 		returns: {type: 'string', root: true},
 		http: {path: '/attend', verb: 'put', source: 'query'}
+	}
+	);
+
+Event.remoteMethod(
+	'readTicket',
+	{
+		accepts: {arg: 'ticketId', type: 'string'},
+		returns: {type: 'string', root: true},
+		http: {path: '/readTicket', verb: 'put', source: 'query'}
 	}
 	);
 
