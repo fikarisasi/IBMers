@@ -13,6 +13,9 @@
     "employeeName": {
       "type": "string"
     },
+    "employeePhoto": {
+      "type": "string"
+    },
     "date": {
       "type": "date"
     }

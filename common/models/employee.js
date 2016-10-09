@@ -32,11 +32,11 @@ module.exports = function(Employee) {
 			});
 	};
 
-	Employee.addComment = function(postId, employeeId, employeeName, content, cb){
+	Employee.addComment = function(postId, employeeId, employeeName, employeePhoto, content, cb){
 		var EmployeeComment = Employee.app.models.Comment;
 		date = new Date();
 		dateJSON = date.toJSON();
-		EmployeeComment.create({postId: postId, employeeId: employeeId, employeeName: employeeName, content: content, date: dateJSON},
+		EmployeeComment.create({postId: postId, employeeId: employeeId, employeeName: employeeName, employeePhoto: employeePhoto, content: content, date: dateJSON},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
@@ -808,6 +808,7 @@ module.exports = function(Employee) {
 					{arg: 'postId', type: 'string'},
 					{arg: 'employeeId', type: 'string'},
 					{arg: 'employeeName', type: 'string'},
+					{arg: 'employeePhoto', type: 'string'},
 					{arg: 'content', type: 'string'}
 					],
 			returns: [
