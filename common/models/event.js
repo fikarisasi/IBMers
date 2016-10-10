@@ -147,37 +147,15 @@ module.exports = function(Event) {
 	}
 
 Event.getAttendees = function(eventId, cb){
-	var Employee = Event.app.models.Employee;
-	Event.findOne({where : {id:eventId}},
+	var Ticket = Event.app.models.Ticket;
+	Ticket.find({where: {eventId: eventId}, fields: {employeeId: true, employeeName: true, employeePhoto: true, scan: true}},
 		function(err, instance){
-			var ticket_orderer = instance['ticket_orderer'].split(","); //get ticket_orderer as array
-			var attendee = instance['attendee']; //get attendee as string
-			var attendStatus = [];
-			var attendeeMessage = [];
-			for(i in ticket_orderer){
-				// if(attendee.includes(ticket_orderer[i])){
-				// 	attendStatus.push(true);
-				// }else{
-				// 	attendStatus.push(false);
-				// }
-				console.log(i==ticket_orderer.length-1);
-				if(i==ticket_orderer.length-1){
-					Employee.findOne({fields: {name: true, photo: true}, where: {id: ticket_orderer[i]}},
-						function(err, instance){
-							attendeeMessage.push(instance);
-							cb(null,attendeeMessage);
-						})
-				}
-				else{
-					Employee.findOne({fields: {name: true, photo: true}, where: {id: ticket_orderer[i]}},
-						function(err, instance){
-							attendeeMessage.push(instance);
-						})
-				}
+			if(instance===null){
+				cb(null,null);
+			}else{
+				cb(null, instance);
 			}
-							console.log(attendeeMessage);
-		}
-	)
+		})
 }
 
 Event.remoteMethod(
