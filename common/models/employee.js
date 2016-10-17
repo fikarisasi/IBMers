@@ -22,7 +22,7 @@ module.exports = function(Employee) {
 	};
 
 	Employee.getContacts = function(cb){
-		Employee.find({fields: {id:true, username: true, name: true, division:true, photo:true}, order: 'name desc'},
+		Employee.find({fields: {id:true, username: true, name: true, division:true, photo:true}, order: 'name asc'},
 			function(err,instance){
 				if(instance===null){
 					cb(null,null);
